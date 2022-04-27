@@ -6,12 +6,12 @@
 #+html_head:     <hr>
 #+html_head:     <nav>
 #+html_head:       <p>
-#+html_head:         <a href="./home.html">Home</a>
-#+html_head:         <a href="./posts.html">Posts</a>
-#+html_head:         <a href="./projects.html">Projects</a>
-#+html_head:         <a href="notes.html">Notes</a>
+#+html_head:         <a href="https://hugo-abreu.github.io/">Home</a>
+#+html_head:         <a href="https://hugo-abreu.github.io/posts.html">Posts</a>
+#+html_head:         <a href="https://hugo-abreu.github.io/projects.html">Projects</a>
+#+html_head:         <a href="https://hugo-abreu.github.io/notes.html">Notes</a>
 #+html_head: 	<a href="https://flickr.com/photos/hugo-abreu">Photography</a>
-#+html_head:         <a href="./about.html">About</a>
+#+html_head:         <a href="https://hugo-abreu.github.io/about.html">About</a>
 #+html_head:       </p>
 #+html_head:     </nav>
 #+html_head:   </div>
