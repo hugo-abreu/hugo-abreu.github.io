@@ -1,0 +1,3 @@
+#+include: ./config/index-setup.org
+
+This is my CV.

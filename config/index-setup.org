@@ -1,0 +1,21 @@
+#+html_head: <link rel="stylesheet" type="text/css" href="./config/index.css" />
+#+html_head: <div id="preamble" class="status">
+#+html_head: <header>
+#+html_head:   <div class="banner">
+#+html_head:     <a id="myname" href="/">Hugo Abreu</a>
+#+html_head:     <hr>
+#+html_head:     <nav>
+#+html_head:       <p>
+#+html_head:         <a href="./home.html">Home</a>
+#+html_head:         <a href="./posts.html">Posts</a>
+#+html_head:         <a href="./projects.html">Projects</a>
+#+html_head:         <a href="notes.html">Notes</a>
+#+html_head: 	<a href="https://flickr.com/photos/hugo-abreu">Photography</a>
+#+html_head:         <a href="./about.html">About</a>
+#+html_head:       </p>
+#+html_head:     </nav>
+#+html_head:   </div>
+#+html_head: </header>
+#+html_head: </div>
+#+options: toc:nil num:nil author:nil
+
