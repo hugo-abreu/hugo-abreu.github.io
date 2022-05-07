@@ -1,3 +1,4 @@
+#+title: Hugo Abreu's webpage - About
 #+include: ./config/index-setup.org
 
 This is my CV.

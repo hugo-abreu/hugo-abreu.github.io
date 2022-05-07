@@ -1,3 +1,4 @@
+#+title: Hugo Abreu's webpage
 #+include: ./config/index-setup.org
 
 #+begin_right

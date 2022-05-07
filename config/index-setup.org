@@ -1,4 +1,3 @@
-#+html_head: <title>Hugo Abreu's personal website</title>
 #+html_head: <link rel="stylesheet" type="text/css" href="./config/index.css" />
 #+html_head: <div id="preamble" class="status">
 #+html_head: <header>
@@ -18,4 +17,4 @@
 #+html_head:   </div>
 #+html_head: </header>
 #+html_head: </div>
-#+options: toc:nil num:nil author:nil
+#+options: toc:nil num:nil author:nil title:nil

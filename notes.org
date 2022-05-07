@@ -1,3 +1,4 @@
+#+title: Hugo Abreu's webpage - Notes
 #+include: ./config/index-setup.org
 
 These are my notes

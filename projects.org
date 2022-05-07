@@ -1,3 +1,4 @@
+#+title: Hugo Abreu's webpage - Projects
 #+include: ./config/index-setup.org
 
 These are my projects
