@@ -27,8 +27,3 @@ For more information, you can take a look at my [[./reference/cv_hugo_abreu_04_2
 **email**: hugo [dot] abreu [at] etu [dot] sorbonne-universite [dot] fr
 
 **PGP**: [[./reference/gpg.txt][02545A82F37A04718B876903C5CCBE5BFDE7569A]]
-
-#+begin_export html
-<p>This site is open source. <a href="{% github_edit_link %}">Improve this page</a></p>
-#+end_export
-
