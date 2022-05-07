@@ -15,7 +15,7 @@
 #+html_head:       </p>
 #+html_head:     </nav>
 #+html_head:   </div>
+#+html_head: <title>Hugo Abreu's website</title>
 #+html_head: </header>
 #+html_head: </div>
 #+options: toc:nil num:nil author:nil
-
