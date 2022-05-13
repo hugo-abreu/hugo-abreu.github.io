@@ -1,0 +1,986 @@
+#+title: Self-test and nonlocality detection
+#+include: ../config/index-setup.org
+
+#+begin_abstract
+This report presents the work carried out on self-testing and nonlocality
+detection in the context of the /Advanced Quantum Information Project/ (PQIA).
+Nonlocality is studied through the prism of semi-definite programming - used
+herein for the numerical simulation and characterization of specific Bell
+scenarios - and its application to self-testing is examined.  Particular
+attention is given to the retrieval of Bell inequalities, and a novel approach
+for the study of local and nonlocal behaviours using nonlinear optimization is
+described.
+#+end_abstract
+
+* Introduction
+  :PROPERTIES:
+  :CUSTOM_ID: introduction
+  :END:
+
+Before the advent of quantum mechanics in the beginning of the century,
+physicists held three fundamental beliefs about the nature of the
+universe: /determinism/ (or /causal determinism/), i.e. events in a
+given paradigm are bound by causality in such a way that any state is
+completely determined by prior states; /reality/, i.e. the universe
+exists independently of observation; and /locality/ (or /local
+causality/), i.e. what happens in a given space-time region should not
+influence what happens in another, space-like separated region. Quantum
+mechanics challenged each one of these notions
+\cite{nielsen_quantum_2010}.
+
+Non-locality in particular posed the most problems: it was the
+corner-stone of Einstein, Podolsky and Rosen's argument in 1935 for the
+incompleteness of quantum mechanics \cite{epr}. Since it seemed to be
+possible for two spatially-separated parties sharing an entangled state
+to influence each other's measurements, resulting in /faster-than-light
+communications/, they argued that such a behaviour was paradoxical (this
+became known as the /EPR paradox/), and postulated that quantum
+mechanics should be compatible with a /hidden local variable
+description/, in which non-local effects would not be allowed.
+
+For more than 30 years, /local-realist/ description of quantum theory
+were not fully discarded. One had to wait until 1964, when
+\citeauthor{bell_einstein_1964} proposed an experiment which would
+definitively decide whether or not certain physical effects of quantum
+entanglement could be reproduced by local hidden variables: the /Bell
+test/ \cite{bell_einstein_1964}. He proposed a condition, known as
+/Bell's inequality/, that any physical experiment has to satisfy if
+nature could be faithfully described by a classical local hidden
+variable theory. Subsequently, several experiments
+\cite{aspect_experiment} have been designed that have violated Bell's
+inequality, proving that no hidden variable theory can describe certain
+phenomenons predicted by quantum mechanics.
+
+Since the 1960s, the field of /Bell nonlocality/ has grown quite
+considerably \cite{brunner}, especially with the establishment of
+/quantum information science/, where nonlocality plays a central role
+\cite{nielsen_quantum_2010}. It is at the heart of /device-independent/
+(/d.i./) protocols such as /self-testing/
+\cite{2020-self-testing-a-review}, /d.i. quantum key distribution/
+\cite{di-qkd}, /d.i. randomness generation/ \cite{di-random}, and
+/delegated blind quantum computing/ \cite{blind-aaronson}.
+
+sets the stage for the rest of the report, establishing the relevant
+theoretical background and framework. Subsequently, deeper attention is
+given to the two main bodies of work: nonlocality detection ( ) and the
+retrieval of Bell inequalities ( ). In , the limits of locality
+detection in noisy systems are studied, and lastly, in , a nonlinear
+approach to study of nonlocality is described.
+
+* Theoretical Framework
+  :PROPERTIES:
+  :CUSTOM_ID: seq:theoretical-framework
+  :END:
+
+Nonlocal behaviours were first predicted and formulated in the context
+of entangled spin one-half particles \cite{epr}. With the establishment
+of Bell nonlocality as a standalone field, specific physical scenarios
+were replaced with more implementation-agnostic frameworks
+\cite{brunner}. In this report, /Bell scenarios/, first introduced by
+\citeauthor{bell_einstein_1964} in \citeyear{bell_einstein_1964}
+\cite{bell_einstein_1964}, are considered.
+
+In a Bell scenario, two parties /Alice/ and /Bob/, sharing a quantum
+state $\ket{\psi}$ on which they can perform valid measurements $M$ and
+$N$, are considered. Each party has $m$ choices of measurement and
+$\Delta$ possible outcomes.
+
+The /outputs/ are denoted $(a,b)$ and the /inputs/ $(x,y)$, as is
+depicted in . For the rest of the report, only Bell scenarios in which
+$\Delta = 2$ and $m \in \{2 ,3\}$ are considered.
+
+From one experiment to another, the outcomes $a$ and $b$ that are
+obtained may vary, even if Alice and Bob use the same measurement
+operators. As such, these outcomes can be described via a /probability
+distribution/ \cite{brunner}.
+
+This elements of this probability distribution are referred to as /joint
+probabilities/, and are denoted $p(a,b|x,y)$. The vector of all joint
+probabilities $\mathcal{P} = \{p(a,b|x,y)\}$ describes the operation of
+the Bell scenario and is referred to as the /behaviour/ () or the
+/correlations/ of the scenario.
+
+[def:behaviour] A behavior or correlations is a vector
+$\mathcal{P} = \{p(a,b|x,y)\}$ of all joint probabilities to obtain the
+output pair $(a,b)$ given the input pair $(x,y)$.
+
+An interesting property of this definition, is that a behavior can be
+seen as a point $\mathcal{P}$ in the vector space
+$\mathbbm{R}^{\Delta^2 m^2}$. This property will be useful for the
+expression of behaviours with semi-definite programming in .
+
+To construct /valid behaviours/, one must ensure that it verifies
+certain conditions: essentially, the behaviour must constitute a /valid
+probability distribution/ \cite{brunner}.
+
+A behaviour $\mathcal{P}$ must satisfy two conditions: it must be
+/positive/, i.e. $\forall a, b, x, y$, $$\label{eq:norm_cons_1}
+    p(a,b|x,y) \geq 0 \text{,}$$ and it must be /normalized/,
+i.e. $\forall x,y \in \{1,m\}$, $$\label{eq:norm_cons_2}
+\sum_{a,b=1}^m p(a,b|x,y) = 1 \text{.}$$
+
+Several types of behaviours exist: with this formalism, one can express
+both /local/, /quantum/ and /no-signalling/ behaviours, respectively
+referred to by the probability spaces to which they belong:
+$\mathcal{L}$, $\mathcal{Q}$ and $\mathcal{NS}$ (this will be addressed
+in more detail in ). In the rest of the report, the space
+$\mathcal{K} \in \{\mathcal{L}, \mathcal{Q}, \mathcal{NS}\}$ will be
+used to refer to the probability space of an arbitrary valid behaviour.
+
+** Characterizing correlations
+   :PROPERTIES:
+   :CUSTOM_ID: sec:char-corr
+   :END:
+
+When considering two distant observers $A$ and $B$ performing
+measurements on a shared physical system, correlations arise as an
+important property of the system \cite{bell-viol-self-test}.
+
+In this subsection, both local, quantum and no-signaling correlations
+are described.
+
+*** Local correlations
+    :PROPERTIES:
+    :CUSTOM_ID: local-correlations
+    :END:
+
+Local correlations correspond to behaviours that are allowed in
+classical physics: informally, they enforce the fact that the two
+observers $A$ and $B$ cannot communicate before outputting $a$ and $b$.
+formalizes this notion:
+
+[def:local-corr] A behaviour $\mathcal{P}$ is said to be local if its
+joint probabilities $p(a,b|x,y)$ can be written
+$$p(a,b|x,y) = \int_\Lambda q(\lambda) p(a|x,\lambda)p(b|y,\lambda)
+    \mathrm{d}\lambda$$ where $\lambda \in \Lambda$ are local hidden
+variables with a probability density distribution $q(\lambda)$.
+Otherwise, the correlations are non local.\\
+
+Local correlations can also be expressed in a simpler form, in terms of
+deterministic local hidden-variable models - in what is referred to as a
+local deterministic behaviour (). The equivalence of these two
+definitions follows from the fact any local randomness present in
+$p(a | x, \lambda)$ and $p(b | y, \lambda)$ can be incorporated in the
+shared random variable $\lambda$ \cite{brunner}.
+
+[def:local-det-beh] Let $\lambda=(a_1,\ldots,a_m\,;\,b_1,\ldots,b_m)$ be
+the assignment of outputs $a_x,b_y$ for each inputs possible. The
+corresponding deterministic behaviour is
+$$\mathbf{d_\lambda}(a,b|x,y) = \begin{cases} 1 & \text{if } a=a_x \text{ and
+    } b=b_y \text{,}\\ 0 & otherwise \text{.} \end{cases}$$ There are
+$\Delta^{2m}$ possible deterministic behaviours.
+
+One can also give an inductive definition for local behaviours, which
+will be useful in the linear programming formulation of :
+
+A behaviour $\mathcal{P}$ is local if and only if it can be
+written as a convex combination of deterministic behaviours, i.e
+$$\mathcal{P} = \sum_\lambda \mu_\lambda \mathbf{d}_\lambda \ , \ \mu_\lambda
+    \geq 0 \ , \ \sum_\lambda \mu_\lambda = 1 \text{.}$$
+
+*** Quantum correlations
+    :PROPERTIES:
+    :CUSTOM_ID: quantum-correlations
+    :END:
+
+Quantum correlations correspond to behaviours that are allowed in
+quantum mechanics: they can possess nonlocal characteristics
+\cite{bell-viol-self-test}.
+
+Let $\mathcal{H_A} \otimes \mathcal{H_B}$ be the joint Hilbert space of
+Alice and Bob and $\rho_{AB}$ be the quantum states representing their
+shared physical system. Let $\{M_{a|x}\}$ and $\{N_{b|y}\}$ be the sets
+of measurement operators respectively on $\mathcal{H_A}$ and
+$\mathcal{H_B}$. These measurement operators satisfy $$\begin{aligned}
+       \forall x,a,\ & M_{a|x} \succcurlyeq 0 & \text{ and } \
+            & \forall x ,\ \sum_a  M_{a|x} = \mathbbm{1}_A \ , \\
+       \forall y,b,\ & M_{b|y} \succcurlyeq 0 & \text{ and } \
+            & \forall y ,\ \sum_b  M_{b|y} = \mathbbm{1}_B \ ,\\
+\end{aligned}$$ therefore $\{M_{a|x}\}$ and $\{N_{b|y}\}$ characterize
+POVMs \cite{nielsen_quantum_2010}, and can thus be experimentally
+constructed.
+
+The set of behaviours achievable in quantum mechanics $\mathcal{Q}$
+corresponds to the set of behaviours who verify the following condition:
+
+[eq:quant-correlation]
+
+A behaviour $\mathcal{P}$ is quantum if its elements can be written as
+$$p(a,b|x,y) = \textrm{Tr}\left(  \rho_{AB}  M_{a|x} \otimes N_{b|y}\right)$$
+
+The previous definition works for pure states, but one can always
+consider a purification for arbitrary quantum states ().
+
+[prop:qu_corr] Without loss of generality, one can take a purification
+$\Phi$ of $\rho_{AB}$ and consider $M_{a|x} ,N_{b|y}$ to be orthogonal
+projectors. Hence, quantum behaviour elements can be written
+$$p(a,b|x,y) = \bra{\Phi}  M_{a|x} \otimes N_{b|y} \ket{\Phi} \text{.}
+        \label{eq:qu_corr}$$
+
+*** No-signaling correlations
+    :PROPERTIES:
+    :CUSTOM_ID: no-signaling-correlations
+    :END:
+
+No-signalling constraints state that the marginal probabilities $p(a|x)$
+(respectively $p(b|y)$) are independent of Bob's (respectively Alice's)
+measurement, i.e /Bob and Alice cannot signal instantaneously their
+outputs to each other by their choice of input/ \cite{brunner}.
+
+A behaviour $\mathcal{P}$ is no-signalling if its elements fulfill the
+following constraints $$\begin{aligned}
+    \forall \ a,x,y,y'\;  & \ \sum_{b=1}^\Delta p(a,b|x,y) & = &\ \sum_{b=1}^\Delta p(a,b|x,y')  \\
+    \forall \ b,y,x,x'\;  & \ \sum_{a=1}^\Delta p(a,b|x,y) & = &\ \sum_{a=1}^\Delta p(a,b|x',y)
+\end{aligned}$$
+
+*** Correlation spaces and facet Bell inequalities
+    :PROPERTIES:
+    :CUSTOM_ID: correlation-spaces-and-facet-bell-inequalities
+    :END:
+
+The relationship between the three types of correlations can be
+visualized in . While the no-signaling and local sets can be easily
+characterized, the set of quantum correlations is more difficult to
+describe \cite{bell-viol-self-test}, but the property in (introduced by
+\citeauthor{popescu_quantum_1994} in \cite{popescu_quantum_1994}) always
+holds.
+
+[prop:corr] Let $\mathcal{NS}$, $\mathcal{Q}$ and $\mathcal{L}$ be the
+set of no-signalling, of quantum and of local correlations. They verify
+$$\mathcal{L} \subset \mathcal{Q} \subset \mathcal{NS} \text{,}$$ and
+$$\dim  \mathcal K = (\Delta - 1)^2 m^2 \text{.}$$
+
+The following definitions are important for the characterisation of
+Facet Bell inequalities, which are important in the linear programming
+formulation.
+
+The sets $\mathcal{L}, \mathcal{Q}$ and $\mathcal{NS}$ are closed,
+bounded and convex.
+
+Let $\mathcal{K}$ be a closed, bounded and convex set. For all
+$\mathcal P_1, \mathcal P_2$ in $\mathcal L$, and all $\alpha$ in
+$[0, 1]$ the following holds:
+$$\alpha  \mathcal{P}_1 + (1-\alpha) \mathcal{P}_2 \in \mathcal{K}$$
+
+For all behaviours $\mathcal P \in \mathcal K$
+$$\exists \mathbf{s} \in \mathbb{R}^t,\  S_k \in \mathbb{R} ,\ \  \mathbf{s}\cdot\mathcal{P} \leq S_k$$
+
+For the local set $\mathcal{L}$, this type of inequalities are called
+/Bell inequalities/ and it is said to be violated by a behaviour
+$\mathcal{P'} \notin \mathcal{L}$ whenever
+$$\mathbf{s}\cdot\mathcal{P'} > S_l$$
+
+Let $\, \mathbf{s}\,\cdot\,\mathcal{P} \leq S_l$ be a valid Bell
+inequality for the polytope $\mathcal{L}$. Then
+$F = \{ \mathcal{P}\in \mathcal{L}|\mathbf{s}\cdot \mathbf{p} = S_l\}$
+is a face of $\mathcal{L}$. Besides, if
+$\dim\,F = \dim\, \mathcal{L} - 1$, F is called a facet of $\mathcal{L}$
+and the corresponding inequalities are called facet Bell inequalities.
+
+Hence, Bell inequalities characterize the local set $\mathcal{L}$, and
+thus help to determine whether a behaviour $\mathcal{P}$ is local or
+not. Moreover, Tsirelson's bound provides a characterization of the
+quantum set \cite{cirelson_quantum_1980}. It is important to stress that
+since the set of quantum behaviours is not a polytope, there exist
+infinitely many Tsirelson bounds.
+
+** Self-testing of quantum states
+   :PROPERTIES:
+   :CUSTOM_ID: self-testing-of-quantum-states
+   :END:
+
+Self-testing is a method to recover information on the physics of a
+quantum experiment, in a black box scenario, i.e. without needing to
+have or to trust a model of the experiment
+\cite{2020-self-testing-a-review}.
+
+A general method to perform self-testing is now described.
+
+The correlations $p(a,b|x,y)$ self-test the state
+$\ket{\Phi^+}_{A^{'}B^{'}}$ if for any state $\rho_{AB}$ compatible with
+$p(a,b|x,y)$ and for any purification $\ket{\Psi}_{ABP}$ of $\rho_{AB}$,
+there exists a local isometry
+$$\mathbf{\Phi}_A \otimes \mathbf{\Phi}_B : \mathcal{H}_A \otimes \mathcal{H}_B
+    \longrightarrow \mathcal{H}_{A^{'}\Bar{A} } \otimes \mathcal{H}_{B^{'}\Bar{B}} \text{ ,}$$
+such that
+$$\mathbf{\Phi}_A \otimes \mathbf{\Phi}_B \otimes \mathbbm{1}_P  \left[  \ket{\Psi}_{ABP}
+    \right] =  \ket{\Psi^{'}}_{A^{'}B^{'}} \otimes \ket{\xi}_{\Bar{A}\Bar{B}P}$$
+[prop:self-test_states]
+
+The extremal points of $\mathcal{Q}$ can be used to self-test both a
+state and a measurement \cite{bell-viol-self-test} and these extremal
+points are known to be candidates for observing a maximal violation of a
+Bell inequality.
+
+In most cases, it is possible to explicitly construct an isometry
+$\mathbf{\Phi}$ mapping the physical state $\ket{\Psi}$ to the reference
+state $\ket{\Phi^+}$ by using a partial Swap gate. For instance, let's
+focus on a Bell scenario with $x,y\in\{0,1\}$. The main idea is that if
+the operators anticommute i.e., $\{A_0,A_1\}=\{B_0,B_1\}=0$, we can
+construct operators $Z_A,X_A,Z_B,X_B$ whose actions are analogous to
+those of the operators used in the 2-qubit Swap gate
+
+$$\begin{aligned}
+        Z_A = \dfrac{1}{\sqrt{2}} (A_0 +A_1)\ \ &\  \ Z_B = B_0 \\
+        X_A = \dfrac{1}{\sqrt{2}} (A_0 +A_1)\ \ &\ \ Z_B = B_0.
+    \end{aligned}$$
+
+Hence, if $\ket{\Psi}$ corresponds to the reference state up to an
+isometry, the Swap gate as pictured in enables the construction of the
+isometry
+$$\mathbf{\Phi}\left[ \ket{\Psi}_{ABP}\right] = \ket{\Phi^+}_{A{'}B{'}} \otimes \ket{\xi}_{ABP} \text{ ,}$$
+where $\ket{\Psi}$ is a purification of the physical state, and $A{'}$
+and $B{'}$ are the Hilbert spaces of the ancillary qubits. As such, the
+reference state is recovered in the ancillary space.
+
+** CHSH correlations
+   :PROPERTIES:
+   :CUSTOM_ID: chsh-correlations
+   :END:
+
+Consider outputs $a,b \in \{-1,1\}$, and inputs $x,y \in \{0,1\}$.
+Letting $\{A_x\}$ be the set of Alice's measurement observables (where
+$A_x = M_{1|x} - M_{-1|x}$ with $M_{a|x}$ the measurement operators),
+and $\{B_y\}$ the one of Bob, one can express the expected correlations
+as $$\begin{aligned}
+    \bra{\Phi} A_0\otimes B_0 \ket{\Phi} & = \dfrac{1}{\sqrt{2}} &\
+    ,\  & \bra{\Phi} A_0\otimes B_1 \ket{\Phi} & = &\ \dfrac{1}{\sqrt{2}}  \\
+    \bra{\Phi} A_1\otimes B_0 \ket{\Phi} & = \dfrac{1}{\sqrt{2}} &\
+    ,\  & \bra{\Phi} A_1\otimes B_1 \ket{\Phi} & = & - \dfrac{1}{\sqrt{2}}  \\
+    \bra{\Phi} A_x\otimes \mathbbm{1_B} \ket{\Phi} & = 0\   \forall x &\ ,\
+    & \bra{\Phi} \mathbbm{1_A}\otimes B_y \ket{\Phi} & = & \ 0 \  \forall y \text{.}
+\end{aligned} \label{eq:corr_chsh}$$
+
+These correlations can be obtained if Alice and Bob share the quantum
+state
+$$\ket{\Phi} = \dfrac{1}{\sqrt{2}} \big( \ket{00} +\ket{11}\big) \text{ ,}$$
+and if Alice measures $A_0 = X$ and $A_1 = Z$, and Bob measures
+$B_0 = (Z+X)/\sqrt{2}$ and $B_1 = (X-Z)/\sqrt{2}$. These operators can
+be related to the measurement operators considered in by
+$$A_x = M_{1|x} - M_{-1|x} \; \text{and} \; B_y = N_{1|y} - N_{-1|y}$$
+and therefore, with , we can write
+$$\bra{\Phi} A_{x} \otimes B_{y} \ket{\Phi} = \sum_{a,b} ab \ p(a,b|x,y)
+    \label{eq:corr_to_prob}$$ and the vector
+$\mathcal P = \left\{ p(a,b|x,y)\right\}$ can be derived by solving the
+systems of equations defined by the previous Equations.
+# [[#eq:corr_chsh][[eq:corr_chsh]]] and
+# [[#eq:corr_to_prob][[eq:corr_to_prob]]], and the normalization
+# constraints in Equations [[#eq:norm_cons_1][[eq:norm_cons_1]]] and
+# [[#eq:norm_cons_2][[eq:norm_cons_2]]].
+
+With local correlations, the following Bell inequality stands
+\cite{bell_einstein_1964} $$\label{eq:chsh}
+     \left< A_0 B_0\right> + \left< A_1 B_0\right> + \left< A_0 B_1 \right> - \left< A_1 B_1 \right>  \leq 2,$$
+which will be referred to as the CHSH inequality.
+
+On the other hand, with a quantum behaviour the Tsirelson's inequality
+is always fulfilled, and \cite{cirelson_quantum_1980}
+$$\left< A_0 B_0\right> + \left< A_1 B_0\right> + \left< A_0 B_1 \right>  - \left< A_1 B_1 \right>  \leq 2 \sqrt{2},$$
+for which the upper bound, called the Tsirelson's bound, is achieved by
+the previous shared state and measurement.
+
+Therefore, the quantum strategy mentioned above achieves a maximum
+violation of the Bell ,
+
+** Mayers-Yao correlations
+   :PROPERTIES:
+   :CUSTOM_ID: mayers-yao-correlations
+   :END:
+
+For Mayers-Yao's self-test, the inputs are $x,y \in \{0,1,2\}$, the
+possible outputs $a,b \in \{0,1\}$ and the expected correlations
+
+$$\label{eq:mayers-yao-correlations}
+\begin{aligned}
+ &\bra{\Phi} A_z \otimes B_z \ket{\Phi} & = 1 &\ \forall z \in \{0,1,2\} \\
+\bra{\Phi} A_x \otimes \mathbbm{1} \ket{\Phi}  = & \bra{\Phi} \mathbbm{1} \otimes B_y \ket{\Phi} & = 0  &\ \forall x,y  \\
+\bra{\Phi} A_0 \otimes B_1 \ket{\Phi} = & \bra{\Phi} A_1 \otimes B_0 \ket{\Phi} & = 0  &\\
+\bra{\Phi} A_0 \otimes B_2\ket{\Phi} = & \bra{\Phi} A_1 \otimes B_2 \ket{\Phi} & = \dfrac{1}{\sqrt{2}} &\\
+\bra{\Phi} A_2 \otimes B_0 \ket{\Phi} = & \bra{\Phi} A_2 \otimes B_1 \ket{\Phi} & = \dfrac{1}{\sqrt{2}} \text{.} & \\
+\end{aligned}$$
+
+These correlations can be achieved whenever Alice and Bob share the
+state
+$$\ket{\Phi} = \dfrac{1}{\sqrt{2}} \left( \ket{00} +\ket{11}\right)\text{,}$$
+and their measurement observables are $$\begin{aligned}
+        A_0 = X_A   \ , \  A_1 = Z_A  , \ A_2 = \dfrac{1}{\sqrt{2}}  (X_A + Z_A), \\
+        B_0 = X_B   , \  B_1 = Z_B  \ , \ B_2 = \dfrac{1}{\sqrt{2}}  (X_B + Z_B) .\\
+\end{aligned}$$
+
+* Non-locality detection
+  :PROPERTIES:
+  :CUSTOM_ID: sec:nonloc-detection
+  :END:
+
+According to the Propositions, it is possible to
+detect a non-local behaviour using linear programming (see ).
+
+** Linear Programming formulation
+   :PROPERTIES:
+   :CUSTOM_ID: primal-LP
+   :END:
+
+Let $\mathcal P$ be the behaviour for which one want to learn whether it
+is local, and let $\mathbbm{1}$ be the behaviour corresponding to the
+random outcome strategy. Observe that $\mathbbm{1}$ is a local
+behaviour. One can test if a behaviour $\mathcal P$ is nonlocal by
+solving the following linear program $$\label{eq:primal}
+    \begin{aligned}
+            & \min_{\alpha,\overrightarrow{\mu}} \; \alpha \\
+	  s.t.  &
+        \begin{cases}
+            (1-\alpha) \mathcal{P}+ \alpha \mathbbm{1} & \leq \sum_\lambda\mu_\lambda \mathbf{d_\lambda} \\
+            \sum_\lambda \mu_\lambda & = 1 \\
+            \alpha & \leq 1 \\
+            \mu_\lambda,\ \alpha & \geq 0 \quad \forall \lambda
+        \end{cases}
+    \end{aligned}$$ that expresses how much $\mathcal P$ can be mixed
+with a random behavior to become local. In the case of an optimal value
+of $\alpha^* = 0$, $\mathcal{P}$ is a local behaviour since it can be
+written as
+$$\mathcal{P} =  \sum_\lambda \mu^*_\lambda \mathbf{d_\lambda} \text{ ,}$$
+where the $\mathbf{\mu^*_\lambda}$ are the coefficients found at the
+optimum; whereas an optimal value of $\alpha^* > 0$ means that
+$\mathcal{P}$
+
+** CHSH correlations
+   :PROPERTIES:
+   :CUSTOM_ID: CHSH_primal
+   :END:
+
+The behaviour obtained by solving the system of equations induced by the
+quantum correlations exposed in is
+
+|  |       |  |  |        |                           |
+|  |       |  |  | (1, 1) |                           |
+|  | (0,0) |  |  |        | $\frac{\cos^2(\pi/8)}{2}$ |
+|  | (0,1) |  |  |        | $\frac{\cos^2(\pi/8)}{2}$ |
+|  | (1,0) |  |  |        | $\frac{\cos^2(\pi/8)}{2}$ |
+|  | (1,1) |  |  |        | $\frac{\sin^2(\pi/8)}{2}$ |
+#+CAPTION: CHSH probability distribution
+
+and solving with the aforementioned behaviour gives an optimal value of
+$$\alpha^*_{CHSH} \approx 1 - \frac{1}{\sqrt{2}} \text{ .}$$
+
+** Mayers-Yao's correlations
+   :PROPERTIES:
+   :CUSTOM_ID: mayers-yaos-correlations
+   :END:
+
+Similarly, the behaviour obtained by solving the system of equations
+induced by the quantum correlations shown in is given in and gives an
+optimal value of $$\label{eq:opt-primal-my}
+    \alpha^*_{MY} \approx 0.1715 \text{ .}$$
+
+<<table:my-prob-dist>>
+|  |         |  |  |       |                           |
+|  |         |  |  | (1,1) |                           |
+|  | $(0,0)$ |  |  |       | $1/2$                     |
+|  | $(0,1)$ |  |  |       | $1/4$                     |
+|  | $(0,2)$ |  |  |       | $\frac{\cos^2(\pi/8)}{2}$ |
+|  | $(1,0)$ |  |  |       | $1/4$                     |
+|  | $(1,1)$ |  |  |       | $1/2$                     |
+|  | $(1,2)$ |  |  |       | $\frac{\cos^2(\pi/8)}{2}$ |
+|  | $(2,0)$ |  |  |       | $\frac{\cos^2(\pi/8)}{2}$ |
+|  | $(2,1)$ |  |  |       | $\frac{\cos^2(\pi/8)}{2}$ |
+|  | $(2,2)$ |  |  |       | $1/2$                     |
+#+CAPTION: Mayers-Yao probability distribution
+
+* Inequalities from duality
+  :PROPERTIES:
+  :CUSTOM_ID: seq:ineq-dual
+  :END:
+
+The linear program for non-locality detection also comes in a useful
+dual form
+
+$$\label{eq:dual}
+    \begin{aligned}
+          & \max_{\gamma,\mathbf{y}} \; \mathcal{P}\cdot \mathbf{y} + \gamma - \omega\\
+     s.t. &
+        \begin{cases}
+            (\mathcal{P} - \mathbbm{1}) \cdot \mathbf{y} - \omega & \leq 1 \\
+            \gamma + \mathbf{d_\lambda} \cdot \mathbf{y} & \leq 0 \ \ \forall \lambda \\
+            \mathbf{y} \in \mathbb{R}_+^n, \gamma \in \mathbb{R}, \omega \geq 0
+        \end{cases}
+    \end{aligned}$$ that can be interpreted as a way to express Bell
+inequalities. Letting $\delta^*$ be the optimal objective value, we can
+write
+$$\mathcal{P}\cdot \mathbf{y^*} \ \leq \  \delta^* + \omega^* - \gamma^*\text{ .}
+\label{eq:ineq_dual_1}$$
+
+Given that an inequality can be multiplied by a positive value, there
+exist many different inequalities we could derive, since
+$$\begin{aligned}
+        &\mathcal{P}\cdot \mathbf{y} &\ \leq \ &  \delta^* + \omega - \gamma \\
+        \Leftrightarrow \hspace{0.2cm} & \ \ M  \,( \mathcal{P}\cdot \mathbf{y} )&\ \leq \ &M\, (\delta^* + \omega - \gamma ) \ \ \forall M \in \mathbb{R}^+ \text{ .}
+    \end{aligned}$$
+
+** CHSH correlations
+   :PROPERTIES:
+   :CUSTOM_ID: chsh-correlations-1
+   :END:
+
+The optimal solution is given by $\mathbf{y^*_{CHSH}}$ in ,
+$\gamma^*_{CHSH} \approx - 2 \sqrt{2}$ and $\omega^*_{CHSH} =0$.\\
+Therefore, we obtain the following Bell inequality
+$$\mathcal{P} \cdot \mathbf{y^*_{CHSH}} \ \lesssim\ 3.1213
+    \label{eq:chsh_ineq1}$$ Multiplying by
+$$M = \dfrac{\gamma^*_{CHSH}}{\delta^* + \omega^*_{CHSH} - \gamma^*_{CHSH}}$$
+gives
+$$\mathcal{P} \cdot \mathbf{z^*_{CHSH}} \ \lesssim\ 2 \sqrt{2} \text{ ,}$$
+where $$\mathbf{z^*_{CHSH}} = M \, \mathbf{y^*_{CHSH}} \text{ .}$$
+
+<<tab:CHSH_dual>>
+|  |         |  |  |         |         |
+|  |         |  |  | $(1,1)$ |         |
+|  | $(0,0)$ |  |  |         | $1.414$ |
+|  | $(0,1)$ |  |  |         | $0$     |
+|  | $(1,0)$ |  |  |         | $1.414$ |
+|  | $(1,1)$ |  |  |         | $0$     |
+#+CAPTION: Optimal solution of the dual
+
+Using this dual with a local strategy such as
+
+|  |         |  |  |         |       |
+|  |         |  |  | $(1,1)$ |       |
+|  | $(0,0)$ |  |  |         | $0$   |
+|  | $(0,1)$ |  |  |         | $0$   |
+|  | $(1,0)$ |  |  |         | $1/2$ |
+|  | $(1,1)$ |  |  |         | $0$   |
+#+CAPTION: Example of a local behaviour
+
+we obtain optimal values $\gamma_{loc}^* = -1$ and $\omega_{loc}^* = 0$.
+Hence, if $\mathcal{P}$ is local, we have
+$$\mathcal{P}_{loc} \cdot \mathbf{y^*_{loc}} \leq 2$$
+
+** Mayers-Yao's correlation
+   :PROPERTIES:
+   :CUSTOM_ID: mayers-yaos-correlation
+   :END:
+
+The optimal solution of the is given by $\mathbf{y^*_{MY}}$ in ,
+$\gamma^*_{MY} \approx 3.313$ and $\omega^*_{MY} =0$. Besides, we can
+notice that $\gamma^*_{MY} \approx 8 \sqrt{\alpha^*_{MY}}$, where
+$\alpha^*_{MY}$ comes from . Therefore, we obtain the following Bell
+inequality $$\mathcal{P} \cdot \mathbf{y^*_{MY}} \ \lesssim \ 3.49$$
+
+<<tab:MY_dual>>
+|  |         |  |  |         |         |
+|  |         |  |  | $(1,1)$ |         |
+|  | $(0,0)$ |  |  |         | $0$     |
+|  | $(0,1)$ |  |  |         | $0$     |
+|  | $(0,2)$ |  |  |         | $0$     |
+|  | $(1,0)$ |  |  |         | $0$     |
+|  | $(1,1)$ |  |  |         | $0$     |
+|  | $(1,2)$ |  |  |         | $1.657$ |
+|  | $(2,0)$ |  |  |         | $0$     |
+|  | $(2,1)$ |  |  |         | $0$     |
+|  | $(2,2)$ |  |  |         | $1.657$ |
+#+CAPTION: Optimal solution of the dual for Mayers-Yao's correlations
+
+With a local strategy, we obtain again the following inequality
+$$\mathcal{P}_{loc} \cdot \mathbf{y^*_{loc}} \lesssim 2$$
+
+From the optimal solution $\mathbf{y^*_{MY}}$ obtained with the quantum
+correlations shown in , one can notice that the input $x=0$ on Alice's
+side is never used. Therefore, one could assume that Alice needs only
+two measurements instead of three to reproduce Mayers-Yao's
+correlations. Similarly, it can be noticed that the input $y=1$ is never
+used by Bob in the optimal strategy.
+
+** Restricted inputs on Alice side for Mayers-Yao's self-test
+   :PROPERTIES:
+   :CUSTOM_ID: restricted-inputs-on-alice-side-for-mayers-yaos-self-test
+   :END:
+
+In this section, Bob still has inputs $y \in \{0,1,2\}$ but Alice's
+inputs are restricted to $x
+\in \{1,2\}$, meaning that Alice only measures $A_0=A_1=Z$ and
+$A_2 = (X+Z)/\sqrt{2}$. Hence, we have less correlations to consider in
+the linear programs and the basis $\{p(a,b|x,y)\}$ will have a smaller
+dimension, but the primal and the dual keep the same form.
+
+The primal gives
+$\alpha^*_{MY,\{1,2;0,1,2\}} \approx 0.1715 \approx \alpha^*_{MY}$ and
+the dual gives $\gamma^*_{MY,\{1,2;0,1,2\}} \approx 3.313$ ,
+$\omega^*_{MY,\{1,2;0,1,2\}} =0$ and $\mathbf{y^*_{MY,\{1,2;0,1,2\}}}$
+in .
+
+<<tab:MY_dual_res>>
+|  |         |  |  |         |         |
+|  |         |  |  | $(1,1)$ |         |
+|  | $(1,0)$ |  |  |         | $1.657$ |
+|  | $(1,1)$ |  |  |         | $0$     |
+|  | $(1,2)$ |  |  |         | $0$     |
+|  | $(2,0)$ |  |  |         | $0$     |
+|  | $(2,1)$ |  |  |         | $0$     |
+|  | $(2,2)$ |  |  |         | $1.657$ |
+#+CAPTION: Optimal solution of the dual for Mayers-Yao's correlations
+with the inputs on Alice's side restricted to $\{1,2\}$
+
+The results are almost exactly the same as before, except that the
+strategy is modified: given an input $(x,y)$, the outputs $(a,b)$ are
+not the same as before. However, we still find the same objective value
+$\alpha^*_{MY}$ and the same Bell inequality.\\
+In , one can notice that Bob does not use the input $y=1$, i.e the
+measurement $Y_1=Z$. However, restricting also the inputs on Bob's side
+to $y \in \{0,2\}$ does not give exactly the same result. We obtain
+$\alpha^*_{MY,\{1,2;0,2\}} \approx 0.1715 \approx \alpha^*_{MY}$ with
+the primal and the dual gives $\gamma^*_{MY,\{1,2;0,2\}} \approx 2.485$
+, $\omega^*_{MY,\{1,2;0,2\}} =0$ and $\mathbf{y^*_{MY,\{1,2;0,2\}}}$ in
+.
+
+<<tab:MY_dual_res2>>
+|  |         |  |  |         |         |
+|  |         |  |  | $(1,1)$ |         |
+|  | $(1,0)$ |  |  |         | $0$     |
+|  | $(1,2)$ |  |  |         | $0.828$ |
+|  | $(2,0)$ |  |  |         | $0.828$ |
+|  | $(2,2)$ |  |  |         | $0.828$ |
+#+CAPTION: Optimal solution of the dual for Mayers-Yao's correlations
+with the inputs on Alice's side restricted to $x \in \{1,2\}$ and on
+Bob's side to $y \in
+\{0,2\}$.
+
+Therefore, even though the optimal strategy is changed, the correlations
+considered are still nonlocal for the restricted inputs
+$x\in\{1,2\}$,$y\in\{0,2\}$.
+
+** Alternative dual formulation
+   :PROPERTIES:
+   :CUSTOM_ID: alternative-dual-formulation
+   :END:
+
+From the numerical results, we observed that the first constraint of the
+is always fulfilled and substituting the inequality by an equality
+yields the same results. However, this modified primal form provides an
+alternative dual for detecting non-locality
+
+$$\label{eq:dual2}
+    \begin{aligned}
+        & \max_{\gamma,\mathbf{w}} \; - \mathcal{P}\cdot \mathbf{w} +
+        \gamma - \omega  \\
+    s.t. &
+        \begin{cases}
+            (\mathbbm{1} - \mathcal{P}) \cdot \mathbf{w}  - \omega & \leq  1\\
+            \gamma + \mathbf{d_\lambda} \cdot \mathbf{w} &\ \leq  0, \ \forall
+            \lambda\\
+            \mathbf{w} \in \mathbb{R}^n ,\ \gamma \in \mathbb{R}, \omega & \geq 0
+        \end{cases}
+    \end{aligned}$$
+
+The results from CHSH and Mayers-Yao exhibit that one always has at the
+optimum $$\begin{aligned}
+        \mathcal{P} \cdot \mathbf{w}^* & =  -\alpha^*, \\
+        \mathbbm{1} \cdot \mathbf{w}^* & =  1 - \alpha^*
+    \end{aligned}$$ and thus, multiplying the first constraint of the
+primal by $\mathbf{w}^*$, one finds that
+
+$$\sum_\lambda \mu^*_\lambda \mathbf{d_\lambda} \cdot \mathbf{w}^* = 0 \text{ ,}$$
+which means that the solution $\mathbf{w}^*$ of the dual problem is
+orthogonal to the optimal convex sum of deterministic behaviours.
+
+According to the of /strong duality/, the optimal objective value is the
+same as the one from the primal and the following inequality is derived
+$$-\mathbf{w}^* \cdot \mathcal{P} \leq \alpha^* + \omega^* - \gamma^*$$
+The main difference with is that the vector $\mathbf{w^*}$ belongs to
+$\mathbb{R}^n$.
+
+For CHSH, we find
+$-\mathbf{w^* _{CHSH}}\cdot \mathcal{P} \leq \alpha^*_{CHSH}$ and for
+Mayers-Yao's,
+$-\mathbf{w^*_{MY}} \cdot \mathcal{P} \leq  \alpha^*_{MY}$.
+
+* Robustness against white noise
+  :PROPERTIES:
+  :CUSTOM_ID: sec:noise
+  :END:
+
+The aim of this section is to study robustness against the addition of
+white noise in a communication channel. The noise of the quantum channel
+is denoted by $\alpha$, and thus we define the accuracy of the channel
+by $\mathcal{V} = 1 -
+\alpha$, e.g. and accuracy of $\mathcal{V} = 1$ corresponds to a
+lossless quantum channel. In experiments using a singlet state generated
+by two entangled photons, the noise can originate from imperfect
+operations on the photon source and detectors. Hence generating a pure
+singlet state is very difficult in practice.\\
+This noise effect can be modeled by the following mixed state, called a
+Werner state, $$\label{eq:werner-state}
+    \rho = \mathcal{V} \ket{\Phi}\bra{\Phi} + (1-\mathcal{V}) \mathbbm{1}\text{ ,}$$
+where $\ket{\Phi}$ is a maximally entangled state and $\mathbbm{1}$ a
+fully randomized behaviour.
+
+The aim is to check for which amount of noise this state produces
+nonlocal behaviour in CHSH and Mayers-Yao scenario. The study of the
+robustness against white noise can be done by two different manners :
+
+1. Start with $\mathcal{V} = 1$ and a given precision $\delta$. While
+   the result of the primal is an $\alpha > 0$, i.e., the behaviour
+   $\mathcal P$ generated by $\rho$ and ideal measurements is non local,
+   set $\mathcal{V} = \mathcal{V} - \delta$. This simple algorithm is
+   useful to draw a curve as shown in , but requires to solve
+   $O(\delta^{-1})$ nonlinear problems, which is not time-wise
+   negligible.
+
+2. Knowing that the visibility $\mathcal{V}$ is in the range $[0, 1]$,
+   and that there exists a minimal value $\mathcal{V}^*$ such that for
+   all $\mathcal{V} > \mathcal{V}^*$, the behaviour $\mathcal P$
+   generated with state $\rho$ ( ) and ideal measurements is not local,
+   one can use a binary search to find $\mathcal{V}^*$ . This allows to
+   proceed with a logarithmic number of iterations and an arbitrary
+   large precision e.g., a twenty-digit accuracy with only 55
+   iterations.
+
+The implementation of the first method yielded the curves represented in
+.
+
+[fig:curve-noise]
+
+Concerning the CHSH's correlations, we obtained
+$$\mathcal V ^*_{CHSH} \approx 0.71  \approx \frac{1}{\sqrt{2}}\text{ ,}$$
+while comparatively, Mayer-Yao's correlations yield
+$$\mathcal{V}^*_{MY} \approx 0.82\text{ .}$$ As a conclusion, the
+maximally entangled state is more robust to noise for CHSH correlations
+than for Mayers-Yao's correlations. The value $\mathcal{V}^*$ can be
+interpreted as the visibility lower bound, meaning that if the amount of
+noise is lower than $1-\mathcal{V}^*$, the violation of a Bell
+inequality remains detectable in an experiment.
+
+Besides, experiments reproducing the maximum violation of a Bell
+inequality for the CHSH game have been realized without the need of
+calibrated devices \cite{shadbolt2012}, and the experimental visibility
+they observed matches with our result.
+
+In each case, one can notice that $\mathcal{V}^* = 1 - \alpha^*$ where
+$\alpha^*$ was the optimal objective obtained in . The study of the
+robustness is equivalent to the primal detecting non-local behaviour
+since it was written using a convex combination of the behaviour and a
+fully randomized behaviour, which is actually a white noise. Therefore,
+the optimal value $\alpha^*$ of the primal corresponds to the maximal
+amount of noise tolerated for violating the Bell inequality. Still, this
+study would be necessary whenever one wants to study different kinds of
+noise or losses arising from experimental setups: specific noises can be
+modeled as specific local behaviours, instead of only white noise
+\cite{shadbolt2012}.
+
+* Non-linear programming
+  :PROPERTIES:
+  :CUSTOM_ID: sec:non-linear
+  :END:
+
+Considering , one can transform the vector $\mathcal P$ into a vector of
+variables. This converts the initial program into a nonlinear program,
+more specifically a quadratic program, and provides as a result a
+behavior $\mathcal P$. This kind of transformation adds new difficulties
+for the resolution, such as non-convex constraints, but all of these are
+left over to the solver.
+
+** Finding the optimal probability distribution
+   :PROPERTIES:
+   :CUSTOM_ID: finding-the-optimal-probability-distribution
+   :END:
+
+Adding the constraints for $\mathcal P$ to be a probability vector
+yields the following nonlinear program $$\label{eq:primal-nl}
+	\begin{aligned}
+			  & \max \; \beta_{CHSH}\\
+		s.t.  &
+		\begin{cases}
+			(1-q) \mathcal P + q \mathbbm{1}
+                & = \sum_\lambda \mu_\lambda \mathbf{d}_\lambda \\
+			\sum_\lambda \mu_\lambda & = 1 \\
+            \sum_{a,b} p(a,b|x,y) & = 1, \; \forall (x,y) \in \{0,1\}^2 \\
+			q & \leq 1 \\
+		    \mu_\lambda \geq 0 \; \forall \lambda, \; q \geq 0
+		\end{cases}
+	\end{aligned}$$ that one could solve to find the maximal value for
+$\beta_{CHSH}$, whose value is the given by the left-hand side of .
+However, it must be remembered that the maximal value one can obtain
+doing this is $\beta_{CHSH} = 4$, where the resulting probability
+distribution describes a behavior belonging to
+$\mathcal{NS}\setminus \mathcal{Q}$.
+
+Finding the boundaries between the sets $\mathcal{Q}$ and $\mathcal{NS}$
+i.e., inequalities violated by behaviors in
+$\mathcal{NS}\setminus \mathcal{Q}$, is an open problem when considering
+arbitrary values of $\Delta$ and $m$. For bipartite scenarios with
+binary outcomes ($\Delta = 2$, $m = 2$),
+
+$$\label{eq:bound-ns-q}
+    | \text{asin}\braket{A_0 B_0}
+    + \text{asin}\braket{A_0 B_1}
+    + \text{asin}\braket{A_1 B_0}
+    - \text{asin}\braket{A_1 B_1} | \leq \pi,$$ introduced by
+\citeauthor{Masanes2003NecessaryAS} in \cite{Masanes2003NecessaryAS},
+provides an explicit description of behaviours belonging to
+$\mathcal{Q}$. Moreover, the two sides are equal whenever the behavior
+maximally violates the CHSH .
+
+While simple to understand, this constraint cannot be enforced by
+Gurobi, that cannot handle constraints described by trigonometric
+functions. Nonetheless, it will only be used to check whether a behavior
+stays in $\mathcal{Q}$.
+
+Taking into consideration both and yields the following procedure to
+find the maximal value of $\beta_{CHSH}$
+
+$\delta$ is the precision, roughly corresponds to the number of number
+of significant digits $\Pi = 2$ is the starting upper bound
+$\Pi \leftarrow \Pi + \delta$ /solve with constraint
+$\beta_{CHSH} \leq \Pi$/ $\mathcal P$/: the optimal probability
+distribution/
+
+[alg:beta-optimal-chsh]
+
+The numerical result is, indeed, arbitrary close to $2 \sqrt 2$
+depending on $\delta$. One should note that not such equation as is
+known for the case $\Delta = 2$ and $m=3$, but it is possible to use the
+generalized CHSH inequality as depicted by
+\citeauthor{wehner_tsirelson_2006} in \cite{wehner_tsirelson_2006}. We
+could have use this for the case $\Delta = m = 2$ even though it will
+yield the same result, but we thought it was more interesting to try at
+least once another formulation. Considering the case $\Delta = 2$ and
+$m=3$, we indeed obtained results arbitrary close to $3 \sqrt 3$, and
+the associated probability distribution.
+
+** Making a behavior local
+   :PROPERTIES:
+   :CUSTOM_ID: making-a-behavior-local
+   :END:
+
+Looking for the optimal probability distribution with a non-linear
+approach led us to a side work, that is, from knowing how many elements
+of the behavior one can infer that the behavior is local. Taking into
+consideration that a behavior with $\Delta = m = 2$ is local if and only
+if $\beta_{CHSH} \leq 2$, it suffices to set $k$ probabilities of, for
+instance, the behavior that maximally violates the CHSH inequality, and
+solving , where the maximization becomes a minimization. By doing this,
+if the optimal value is a $\beta^*_{CHSH} \leq 2$, then it is possible
+to find a full behavior that is local, and its elements are given in the
+same time by the solver. Otherwise, one can be sure that it is not
+possible to make the behavior local.
+
+The results of the implementation with Gurobi yielded on one hand that
+with $k =
+4$, where for each $(x,y)$, a single $p(a,b|x,y)$ is fixed, it is not
+anymore possible to find values for the other probabilities such that
+the behavior is local, in addition, it only results on the behavior that
+gives $\beta_{CHSH} = 2
+\sqrt 2$, since it removes all degrees of freedom for the other
+probabilities in the light of the normalization constraints ( ) and ( ).
+
+Moreover, fixing only one expectation $\braket{A_x B_y}$ gives an
+optimal of 0 with $\beta_{CHSH} = 0$, while fixing an arbitrary number
+of probabilities among up to 3 expectations yields a local behavior,
+with an optimal 0, yet $\beta_{CHSH} \approx 1.1213$.
+
+Besides, thanks to the implementation of , we were able to generate a
+behavior $\mathcal P_{\Delta}$ whose CHSH value is $\beta_{CHSH} = 2
++ \Delta$, hence that violates the inequality with an arbitrary small
+precision $\Delta$. It yielded for the both aforementioned cases exactly
+the same results.
+
+For the case of the Mayers-Yao's correlations, the same result is
+obtained when fixing one probability per expectation i.e., the resulting
+probability distribution stays unchanged. One the other hand, fixing 3
+arbitrary expectation also yields the same optimal objective as given in
+, enforcing the behavior to be in $\mathcal{Q}$, while fixing only 2
+arbitrary expectations causes the behavior to be local.
+
+* Mathematical optimization
+  :PROPERTIES:
+  :CUSTOM_ID: sec:math-opt
+  :END:
+
+Mathematical optimization aims to maximize (or minimize) the value of a
+function[fn:1], under specific /constraints/. The simplest instance of
+mathematical optimization is /linear programming/, where both the
+objective and the constraints are /linear functions/ of the variables.
+
+Both linear optimization and nonlinear optimization will be examined.
+
+For all the numerical simulations and the corresponding implementations,
+Gurobi \cite{gurobi} (a solver that can handle both linear and quadratic
+optimization problems) was used.
+
+** Linear optimization
+   :PROPERTIES:
+   :CUSTOM_ID: linear-optimization
+   :END:
+
+The field of linear optimization grew in tandem with the field of
+Computer Science, and the /"programmatic"/ approach to linear
+optimization became very popular. As such, it will be explained via
+/linear programming/ conventions and notations.
+
+A /linear program/ is written as $$\begin{aligned}
+    \max \ or\ \min & \ z = c^T x \\
+    s.t. &
+    \begin{cases}
+    Ax & \leq b \\
+    x & \geq 0
+    \end{cases}\text{ ,}
+\end{aligned} \label{eq:general-primal}$$ where
+$c^t = ( c_1, \cdots, c_n )$ corresponds to the /objective function
+coefficients/, $x^t = (x_1, \cdots, x_n)$ to the /decision variables/,
+$b^t = (b_1, \cdots, b_m)$ to the /value of the constraints/ and
+$$A =\begin{pmatrix}a_{11} & \cdots & a_{1n} \\ \hdots & \ddots & \hdots \\ a_{m1} & \cdots & a_{mn} \\ \end{pmatrix}$$
+to the /constraint coefficients/. Here, $z$ corresponds to the
+/objective function/.
+
+The choice of inequality ($\geq$ or $\leq$) is arbitrary, since one can
+always multiply both sides by a negative coefficient and obtain the
+other. To obtain an equality, one can use two separate inequalities.
+
+The problem formulated in is generally referred to as the /primal/
+problem, and its /dual/ form is $$\begin{aligned}
+    \min \ or\ \max & \ z' = v^T b \\
+    s.t. &
+    \begin{cases}
+    A^Tv & \geq c \\
+    v & \geq 0
+    \end{cases} \text{ .}
+\end{aligned} \label{eq:dual-primal}$$
+
+In , the dual form is very important. To switch from one form to the
+other, is important since it states that the optimum of either objective
+form is the same. The following definitions are preliminaries for its
+introduction.
+
+$x\in \mathbbm R^n$ is a feasible solution as long as it satisfies every
+constraints of the problem.
+
+$x\in \mathbbm R^n$ is an optimal solution whenever it gives to $z$ its
+optimal value.
+
+[th:strong-duality] If there exists a feasible solution for the primal,
+then the primal optimal objective and the dual optimal objective are
+equal.
+
+Lastly, an important thing to keep in mind is that in linear
+optimization, the optimal solution is often an extremal point of a
+polytope belonging to $\mathbbm R^n$, whose facets are described by the
+constraints.
+
+** Nonlinear optimization
+   :PROPERTIES:
+   :CUSTOM_ID: nonlinear-optimization
+   :END:
+
+Nonlinear optimization, unlike linear optimization, handles with
+problems where the constraints are nonlinear functions of the variables,
+such as exponentials, trigonometric, or polynomial functions. In , the
+formulated problems only deals with quadratic function, which are quite
+easy problem to solve.
+
+While linear optimization can be solved in polynomial time
+\cite{karmarkar_new_1984}, nonlinear optimization is, except for some
+cases, an NP-Hard problem \cite{hochbaum_complexity_2007}. In addition,
+there are fundamental issues with nonlinear optimization inherent in
+digital computer e.g., floating point arithmetic precision.
+Consequently, the techniques for finding the optimal solutions are not
+exposed here. The
+
+[fn:1] the /objective function/
