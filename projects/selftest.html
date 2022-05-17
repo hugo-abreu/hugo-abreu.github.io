@@ -1,0 +1,2105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<!-- 2022-05-10 Tue 11:26 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Self-test and nonlocality detection</title>
+<meta name="generator" content="Org Mode" />
+<style>
+  #content { max-width: 60em; margin: auto; }
+  .title  { text-align: center;
+             margin-bottom: .2em; }
+  .subtitle { text-align: center;
+              font-size: medium;
+              font-weight: bold;
+              margin-top:0; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { font-family: monospace; color: green; }
+  .priority { font-family: monospace; color: orange; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .org-right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .org-left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .org-center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #e6e6e6;
+    border-radius: 3px;
+    background-color: #f2f2f2;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: auto;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    padding: 3px;
+    color: #555;
+    background-color: #f2f2f299;
+  }
+  pre.src:hover:before { display: inline; margin-top: 14px;}
+  /* Languages per Org manual */
+  pre.src-asymptote:before { content: 'Asymptote'; }
+  pre.src-awk:before { content: 'Awk'; }
+  pre.src-authinfo::before { content: 'Authinfo'; }
+  pre.src-C:before { content: 'C'; }
+  /* pre.src-C++ doesn't work in CSS */
+  pre.src-clojure:before { content: 'Clojure'; }
+  pre.src-css:before { content: 'CSS'; }
+  pre.src-D:before { content: 'D'; }
+  pre.src-ditaa:before { content: 'ditaa'; }
+  pre.src-dot:before { content: 'Graphviz'; }
+  pre.src-calc:before { content: 'Emacs Calc'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-fortran:before { content: 'Fortran'; }
+  pre.src-gnuplot:before { content: 'gnuplot'; }
+  pre.src-haskell:before { content: 'Haskell'; }
+  pre.src-hledger:before { content: 'hledger'; }
+  pre.src-java:before { content: 'Java'; }
+  pre.src-js:before { content: 'Javascript'; }
+  pre.src-latex:before { content: 'LaTeX'; }
+  pre.src-ledger:before { content: 'Ledger'; }
+  pre.src-lisp:before { content: 'Lisp'; }
+  pre.src-lilypond:before { content: 'Lilypond'; }
+  pre.src-lua:before { content: 'Lua'; }
+  pre.src-matlab:before { content: 'MATLAB'; }
+  pre.src-mscgen:before { content: 'Mscgen'; }
+  pre.src-ocaml:before { content: 'Objective Caml'; }
+  pre.src-octave:before { content: 'Octave'; }
+  pre.src-org:before { content: 'Org mode'; }
+  pre.src-oz:before { content: 'OZ'; }
+  pre.src-plantuml:before { content: 'Plantuml'; }
+  pre.src-processing:before { content: 'Processing.js'; }
+  pre.src-python:before { content: 'Python'; }
+  pre.src-R:before { content: 'R'; }
+  pre.src-ruby:before { content: 'Ruby'; }
+  pre.src-sass:before { content: 'Sass'; }
+  pre.src-scheme:before { content: 'Scheme'; }
+  pre.src-screen:before { content: 'Gnu Screen'; }
+  pre.src-sed:before { content: 'Sed'; }
+  pre.src-sh:before { content: 'shell'; }
+  pre.src-sql:before { content: 'SQL'; }
+  pre.src-sqlite:before { content: 'SQLite'; }
+  /* additional languages in org.el's org-babel-load-languages alist */
+  pre.src-forth:before { content: 'Forth'; }
+  pre.src-io:before { content: 'IO'; }
+  pre.src-J:before { content: 'J'; }
+  pre.src-makefile:before { content: 'Makefile'; }
+  pre.src-maxima:before { content: 'Maxima'; }
+  pre.src-perl:before { content: 'Perl'; }
+  pre.src-picolisp:before { content: 'Pico Lisp'; }
+  pre.src-scala:before { content: 'Scala'; }
+  pre.src-shell:before { content: 'Shell Script'; }
+  pre.src-ebnf2ps:before { content: 'ebfn2ps'; }
+  /* additional language identifiers per "defun org-babel-execute"
+       in ob-*.el */
+  pre.src-cpp:before  { content: 'C++'; }
+  pre.src-abc:before  { content: 'ABC'; }
+  pre.src-coq:before  { content: 'Coq'; }
+  pre.src-groovy:before  { content: 'Groovy'; }
+  /* additional language identifiers from org-babel-shell-names in
+     ob-shell.el: ob-shell is the only babel language using a lambda to put
+     the execution function name together. */
+  pre.src-bash:before  { content: 'bash'; }
+  pre.src-csh:before  { content: 'csh'; }
+  pre.src-ash:before  { content: 'ash'; }
+  pre.src-dash:before  { content: 'dash'; }
+  pre.src-ksh:before  { content: 'ksh'; }
+  pre.src-mksh:before  { content: 'mksh'; }
+  pre.src-posh:before  { content: 'posh'; }
+  /* Additional Emacs modes also supported by the LaTeX listings package */
+  pre.src-ada:before { content: 'Ada'; }
+  pre.src-asm:before { content: 'Assembler'; }
+  pre.src-caml:before { content: 'Caml'; }
+  pre.src-delphi:before { content: 'Delphi'; }
+  pre.src-html:before { content: 'HTML'; }
+  pre.src-idl:before { content: 'IDL'; }
+  pre.src-mercury:before { content: 'Mercury'; }
+  pre.src-metapost:before { content: 'MetaPost'; }
+  pre.src-modula-2:before { content: 'Modula-2'; }
+  pre.src-pascal:before { content: 'Pascal'; }
+  pre.src-ps:before { content: 'PostScript'; }
+  pre.src-prolog:before { content: 'Prolog'; }
+  pre.src-simula:before { content: 'Simula'; }
+  pre.src-tcl:before { content: 'tcl'; }
+  pre.src-tex:before { content: 'TeX'; }
+  pre.src-plain-tex:before { content: 'Plain TeX'; }
+  pre.src-verilog:before { content: 'Verilog'; }
+  pre.src-vhdl:before { content: 'VHDL'; }
+  pre.src-xml:before { content: 'XML'; }
+  pre.src-nxml:before { content: 'XML'; }
+  /* add a generic configuration mode; LaTeX export needs an additional
+     (add-to-list 'org-latex-listings-langs '(conf " ")) in .emacs */
+  pre.src-conf:before { content: 'Configuration File'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.org-right  { text-align: center;  }
+  th.org-left   { text-align: center;   }
+  th.org-center { text-align: center; }
+  td.org-right  { text-align: right;  }
+  td.org-left   { text-align: left;   }
+  td.org-center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara { display: inline; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .equation-container {
+    display: table;
+    text-align: center;
+    width: 100%;
+  }
+  .equation {
+    vertical-align: middle;
+  }
+  .equation-label {
+    display: table-cell;
+    text-align: right;
+    vertical-align: middle;
+  }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  .org-svg { }
+</style>
+<link rel="stylesheet" type="text/css" href="../config/index.css" />
+<div id="preamble" class="status">
+<header>
+<div class="banner">
+<a id="myname" href="/">Hugo Abreu</a>
+<hr>
+<nav>
+<p>
+<a href="https://hugo-abreu.github.io/">Home</a>
+<a href="https://hugo-abreu.github.io/posts.html">Posts</a>
+<a href="https://hugo-abreu.github.io/projects.html">Projects</a>
+<a href="https://hugo-abreu.github.io/notes.html">Notes</a>
+<a href="https://flickr.com/photos/hugo-abreu">Photography</a>
+<a href="https://hugo-abreu.github.io/about.html">About</a>
+</p>
+</nav>
+</div>
+</header>
+</div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body>
+<div id="content" class="content">
+<div id="table-of-contents" role="doc-toc">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#seq:theoretical-framework">Theoretical Framework</a>
+<ul>
+<li><a href="#sec:char-corr">Characterizing correlations</a>
+<ul>
+<li><a href="#local-correlations">Local correlations</a></li>
+<li><a href="#quantum-correlations">Quantum correlations</a></li>
+<li><a href="#no-signaling-correlations">No-signaling correlations</a></li>
+<li><a href="#correlation-spaces-and-facet-bell-inequalities">Correlation spaces and facet Bell inequalities</a></li>
+</ul>
+</li>
+<li><a href="#self-testing-of-quantum-states">Self-testing of quantum states</a></li>
+<li><a href="#chsh-correlations">CHSH correlations</a></li>
+<li><a href="#mayers-yao-correlations">Mayers-Yao correlations</a></li>
+</ul>
+</li>
+<li><a href="#sec:nonloc-detection">Non-locality detection</a>
+<ul>
+<li><a href="#primal-LP">Linear Programming formulation</a></li>
+<li><a href="#CHSH_primal">CHSH correlations</a></li>
+<li><a href="#mayers-yaos-correlations">Mayers-Yao's correlations</a></li>
+</ul>
+</li>
+<li><a href="#seq:ineq-dual">Inequalities from duality</a>
+<ul>
+<li><a href="#chsh-correlations-1">CHSH correlations</a></li>
+<li><a href="#mayers-yaos-correlation">Mayers-Yao's correlation</a></li>
+<li><a href="#restricted-inputs-on-alice-side-for-mayers-yaos-self-test">Restricted inputs on Alice side for Mayers-Yao's self-test</a></li>
+<li><a href="#alternative-dual-formulation">Alternative dual formulation</a></li>
+</ul>
+</li>
+<li><a href="#sec:noise">Robustness against white noise</a></li>
+<li><a href="#sec:non-linear">Non-linear programming</a>
+<ul>
+<li><a href="#finding-the-optimal-probability-distribution">Finding the optimal probability distribution</a></li>
+<li><a href="#making-a-behavior-local">Making a behavior local</a></li>
+</ul>
+</li>
+<li><a href="#sec:math-opt">Mathematical optimization</a>
+<ul>
+<li><a href="#linear-optimization">Linear optimization</a></li>
+<li><a href="#nonlinear-optimization">Nonlinear optimization</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="abstract" id="org1760590">
+<p>
+This report presents the work carried out on self-testing and nonlocality
+detection in the context of the <i>Advanced Quantum Information Project</i> (PQIA).
+Nonlocality is studied through the prism of semi-definite programming - used
+herein for the numerical simulation and characterization of specific Bell
+scenarios - and its application to self-testing is examined.  Particular
+attention is given to the retrieval of Bell inequalities, and a novel approach
+for the study of local and nonlocal behaviours using nonlinear optimization is
+described.
+</p>
+
+</div>
+
+<div id="outline-container-introduction" class="outline-2">
+<h2 id="introduction">Introduction</h2>
+<div class="outline-text-2" id="text-introduction">
+<p>
+Before the advent of quantum mechanics in the beginning of the century,
+physicists held three fundamental beliefs about the nature of the
+universe: <i>determinism</i> (or <i>causal determinism</i>), i.e. events in a
+given paradigm are bound by causality in such a way that any state is
+completely determined by prior states; <i>reality</i>, i.e. the universe
+exists independently of observation; and <i>locality</i> (or <i>local
+causality</i>), i.e. what happens in a given space-time region should not
+influence what happens in another, space-like separated region. Quantum
+mechanics challenged each one of these notions
+\cite{nielsen_quantum_2010}.
+</p>
+
+<p>
+Non-locality in particular posed the most problems: it was the
+corner-stone of Einstein, Podolsky and Rosen's argument in 1935 for the
+incompleteness of quantum mechanics \cite{epr}. Since it seemed to be
+possible for two spatially-separated parties sharing an entangled state
+to influence each other's measurements, resulting in <i>faster-than-light
+communications</i>, they argued that such a behaviour was paradoxical (this
+became known as the <i>EPR paradox</i>), and postulated that quantum
+mechanics should be compatible with a <i>hidden local variable
+description</i>, in which non-local effects would not be allowed.
+</p>
+
+<p>
+For more than 30 years, <i>local-realist</i> description of quantum theory
+were not fully discarded. One had to wait until 1964, when
+\citeauthor{bell_einstein_1964} proposed an experiment which would
+definitively decide whether or not certain physical effects of quantum
+entanglement could be reproduced by local hidden variables: the <i>Bell
+test</i> \cite{bell_einstein_1964}. He proposed a condition, known as
+<i>Bell's inequality</i>, that any physical experiment has to satisfy if
+nature could be faithfully described by a classical local hidden
+variable theory. Subsequently, several experiments
+\cite{aspect_experiment} have been designed that have violated Bell's
+inequality, proving that no hidden variable theory can describe certain
+phenomenons predicted by quantum mechanics.
+</p>
+
+<p>
+Since the 1960s, the field of <i>Bell nonlocality</i> has grown quite
+considerably \cite{brunner}, especially with the establishment of
+<i>quantum information science</i>, where nonlocality plays a central role
+\cite{nielsen_quantum_2010}. It is at the heart of <i>device-independent</i>
+(<i>d.i.</i>) protocols such as <i>self-testing</i>
+\cite{2020-self-testing-a-review}, <i>d.i. quantum key distribution</i>
+\cite{di-qkd}, <i>d.i. randomness generation</i> \cite{di-random}, and
+<i>delegated blind quantum computing</i> \cite{blind-aaronson}.
+</p>
+
+<p>
+sets the stage for the rest of the report, establishing the relevant
+theoretical background and framework. Subsequently, deeper attention is
+given to the two main bodies of work: nonlocality detection ( ) and the
+retrieval of Bell inequalities ( ). In , the limits of locality
+detection in noisy systems are studied, and lastly, in , a nonlinear
+approach to study of nonlocality is described.
+</p>
+</div>
+</div>
+
+<div id="outline-container-seq:theoretical-framework" class="outline-2">
+<h2 id="seq:theoretical-framework">Theoretical Framework</h2>
+<div class="outline-text-2" id="text-seq:theoretical-framework">
+<p>
+Nonlocal behaviours were first predicted and formulated in the context
+of entangled spin one-half particles \cite{epr}. With the establishment
+of Bell nonlocality as a standalone field, specific physical scenarios
+were replaced with more implementation-agnostic frameworks
+\cite{brunner}. In this report, <i>Bell scenarios</i>, first introduced by
+\citeauthor{bell_einstein_1964} in \citeyear{bell_einstein_1964}
+\cite{bell_einstein_1964}, are considered.
+</p>
+
+<p>
+In a Bell scenario, two parties <i>Alice</i> and <i>Bob</i>, sharing a quantum
+state \(\ket{\psi}\) on which they can perform valid measurements \(M\) and
+\(N\), are considered. Each party has \(m\) choices of measurement and
+\(\Delta\) possible outcomes.
+</p>
+
+<p>
+The <i>outputs</i> are denoted \((a,b)\) and the <i>inputs</i> \((x,y)\), as is
+depicted in . For the rest of the report, only Bell scenarios in which
+\(\Delta = 2\) and \(m \in \{2 ,3\}\) are considered.
+</p>
+
+<p>
+From one experiment to another, the outcomes \(a\) and \(b\) that are
+obtained may vary, even if Alice and Bob use the same measurement
+operators. As such, these outcomes can be described via a <i>probability
+distribution</i> \cite{brunner}.
+</p>
+
+<p>
+This elements of this probability distribution are referred to as <i>joint
+probabilities</i>, and are denoted \(p(a,b|x,y)\). The vector of all joint
+probabilities \(\mathcal{P} = \{p(a,b|x,y)\}\) describes the operation of
+the Bell scenario and is referred to as the <i>behaviour</i> () or the
+<i>correlations</i> of the scenario.
+</p>
+
+<p>
+[def:behaviour] A behavior or correlations is a vector
+\(\mathcal{P} = \{p(a,b|x,y)\}\) of all joint probabilities to obtain the
+output pair \((a,b)\) given the input pair \((x,y)\).
+</p>
+
+<p>
+An interesting property of this definition, is that a behavior can be
+seen as a point \(\mathcal{P}\) in the vector space
+\(\mathbbm{R}^{\Delta^2 m^2}\). This property will be useful for the
+expression of behaviours with semi-definite programming in .
+</p>
+
+<p>
+To construct <i>valid behaviours</i>, one must ensure that it verifies
+certain conditions: essentially, the behaviour must constitute a <i>valid
+probability distribution</i> \cite{brunner}.
+</p>
+
+<p>
+A behaviour \(\mathcal{P}\) must satisfy two conditions: it must be
+<i>positive</i>, i.e. \(\forall a, b, x, y\), \[\label{eq:norm_cons_1}
+    p(a,b|x,y) \geq 0 \text{,}\] and it must be <i>normalized</i>,
+i.e. \(\forall x,y \in \{1,m\}\), \[\label{eq:norm_cons_2}
+\sum_{a,b=1}^m p(a,b|x,y) = 1 \text{.}\]
+</p>
+
+<p>
+Several types of behaviours exist: with this formalism, one can express
+both <i>local</i>, <i>quantum</i> and <i>no-signalling</i> behaviours, respectively
+referred to by the probability spaces to which they belong:
+\(\mathcal{L}\), \(\mathcal{Q}\) and \(\mathcal{NS}\) (this will be addressed
+in more detail in ). In the rest of the report, the space
+\(\mathcal{K} \in \{\mathcal{L}, \mathcal{Q}, \mathcal{NS}\}\) will be
+used to refer to the probability space of an arbitrary valid behaviour.
+</p>
+</div>
+
+<div id="outline-container-sec:char-corr" class="outline-3">
+<h3 id="sec:char-corr">Characterizing correlations</h3>
+<div class="outline-text-3" id="text-sec:char-corr">
+<p>
+When considering two distant observers \(A\) and \(B\) performing
+measurements on a shared physical system, correlations arise as an
+important property of the system \cite{bell-viol-self-test}.
+</p>
+
+<p>
+In this subsection, both local, quantum and no-signaling correlations
+are described.
+</p>
+</div>
+
+<div id="outline-container-local-correlations" class="outline-4">
+<h4 id="local-correlations">Local correlations</h4>
+<div class="outline-text-4" id="text-local-correlations">
+<p>
+Local correlations correspond to behaviours that are allowed in
+classical physics: informally, they enforce the fact that the two
+observers \(A\) and \(B\) cannot communicate before outputting \(a\) and \(b\).
+formalizes this notion:
+</p>
+
+<p>
+[def:local-corr] A behaviour \(\mathcal{P}\) is said to be local if its
+joint probabilities \(p(a,b|x,y)\) can be written
+\[p(a,b|x,y) = \int_\Lambda q(\lambda) p(a|x,\lambda)p(b|y,\lambda)
+    \mathrm{d}\lambda\] where \(\lambda \in \Lambda\) are local hidden
+variables with a probability density distribution \(q(\lambda)\).
+Otherwise, the correlations are non local.<br />
+</p>
+
+<p>
+Local correlations can also be expressed in a simpler form, in terms of
+deterministic local hidden-variable models - in what is referred to as a
+local deterministic behaviour (). The equivalence of these two
+definitions follows from the fact any local randomness present in
+\(p(a | x, \lambda)\) and \(p(b | y, \lambda)\) can be incorporated in the
+shared random variable \(\lambda\) \cite{brunner}.
+</p>
+
+<p>
+[def:local-det-beh] Let \(\lambda=(a_1,\ldots,a_m\,;\,b_1,\ldots,b_m)\) be
+the assignment of outputs \(a_x,b_y\) for each inputs possible. The
+corresponding deterministic behaviour is
+\[\mathbf{d_\lambda}(a,b|x,y) = \begin{cases} 1 & \text{if } a=a_x \text{ and
+    } b=b_y \text{,}\\ 0 & otherwise \text{.} \end{cases}\] There are
+\(\Delta^{2m}\) possible deterministic behaviours.
+</p>
+
+<p>
+One can also give an inductive definition for local behaviours, which
+will be useful in the linear programming formulation of :
+</p>
+
+<p>
+A behaviour \(\mathcal{P}\) is local if and only if it can be
+written as a convex combination of deterministic behaviours, i.e
+\[\mathcal{P} = \sum_\lambda \mu_\lambda \mathbf{d}_\lambda \ , \ \mu_\lambda
+    \geq 0 \ , \ \sum_\lambda \mu_\lambda = 1 \text{.}\]
+</p>
+</div>
+</div>
+
+<div id="outline-container-quantum-correlations" class="outline-4">
+<h4 id="quantum-correlations">Quantum correlations</h4>
+<div class="outline-text-4" id="text-quantum-correlations">
+<p>
+Quantum correlations correspond to behaviours that are allowed in
+quantum mechanics: they can possess nonlocal characteristics
+\cite{bell-viol-self-test}.
+</p>
+
+<p>
+Let \(\mathcal{H_A} \otimes \mathcal{H_B}\) be the joint Hilbert space of
+Alice and Bob and \(\rho_{AB}\) be the quantum states representing their
+shared physical system. Let \(\{M_{a|x}\}\) and \(\{N_{b|y}\}\) be the sets
+of measurement operators respectively on \(\mathcal{H_A}\) and
+\(\mathcal{H_B}\). These measurement operators satisfy \[\begin{aligned}
+       \forall x,a,\ & M_{a|x} \succcurlyeq 0 & \text{ and } \
+            & \forall x ,\ \sum_a  M_{a|x} = \mathbbm{1}_A \ , \\
+       \forall y,b,\ & M_{b|y} \succcurlyeq 0 & \text{ and } \
+            & \forall y ,\ \sum_b  M_{b|y} = \mathbbm{1}_B \ ,\\
+\end{aligned}\] therefore \(\{M_{a|x}\}\) and \(\{N_{b|y}\}\) characterize
+POVMs \cite{nielsen_quantum_2010}, and can thus be experimentally
+constructed.
+</p>
+
+<p>
+The set of behaviours achievable in quantum mechanics \(\mathcal{Q}\)
+corresponds to the set of behaviours who verify the following condition:
+</p>
+
+<p>
+[eq:quant-correlation]
+</p>
+
+<p>
+A behaviour \(\mathcal{P}\) is quantum if its elements can be written as
+\[p(a,b|x,y) = \textrm{Tr}\left(  \rho_{AB}  M_{a|x} \otimes N_{b|y}\right)\]
+</p>
+
+<p>
+The previous definition works for pure states, but one can always
+consider a purification for arbitrary quantum states ().
+</p>
+
+<p>
+[prop:qu<sub>corr</sub>] Without loss of generality, one can take a purification
+\(\Phi\) of \(\rho_{AB}\) and consider \(M_{a|x} ,N_{b|y}\) to be orthogonal
+projectors. Hence, quantum behaviour elements can be written
+\[p(a,b|x,y) = \bra{\Phi}  M_{a|x} \otimes N_{b|y} \ket{\Phi} \text{.}
+        \label{eq:qu_corr}\]
+</p>
+</div>
+</div>
+
+<div id="outline-container-no-signaling-correlations" class="outline-4">
+<h4 id="no-signaling-correlations">No-signaling correlations</h4>
+<div class="outline-text-4" id="text-no-signaling-correlations">
+<p>
+No-signalling constraints state that the marginal probabilities \(p(a|x)\)
+(respectively \(p(b|y)\)) are independent of Bob's (respectively Alice's)
+measurement, i.e <i>Bob and Alice cannot signal instantaneously their
+outputs to each other by their choice of input</i> \cite{brunner}.
+</p>
+
+<p>
+A behaviour \(\mathcal{P}\) is no-signalling if its elements fulfill the
+following constraints \[\begin{aligned}
+    \forall \ a,x,y,y'\;  & \ \sum_{b=1}^\Delta p(a,b|x,y) & = &\ \sum_{b=1}^\Delta p(a,b|x,y')  \\
+    \forall \ b,y,x,x'\;  & \ \sum_{a=1}^\Delta p(a,b|x,y) & = &\ \sum_{a=1}^\Delta p(a,b|x',y)
+\end{aligned}\]
+</p>
+</div>
+</div>
+
+<div id="outline-container-correlation-spaces-and-facet-bell-inequalities" class="outline-4">
+<h4 id="correlation-spaces-and-facet-bell-inequalities">Correlation spaces and facet Bell inequalities</h4>
+<div class="outline-text-4" id="text-correlation-spaces-and-facet-bell-inequalities">
+<p>
+The relationship between the three types of correlations can be
+visualized in . While the no-signaling and local sets can be easily
+characterized, the set of quantum correlations is more difficult to
+describe \cite{bell-viol-self-test}, but the property in (introduced by
+\citeauthor{popescu_quantum_1994} in \cite{popescu_quantum_1994}) always
+holds.
+</p>
+
+<p>
+[prop:corr] Let \(\mathcal{NS}\), \(\mathcal{Q}\) and \(\mathcal{L}\) be the
+set of no-signalling, of quantum and of local correlations. They verify
+\[\mathcal{L} \subset \mathcal{Q} \subset \mathcal{NS} \text{,}\] and
+\[\dim  \mathcal K = (\Delta - 1)^2 m^2 \text{.}\]
+</p>
+
+<p>
+The following definitions are important for the characterisation of
+Facet Bell inequalities, which are important in the linear programming
+formulation.
+</p>
+
+<p>
+The sets \(\mathcal{L}, \mathcal{Q}\) and \(\mathcal{NS}\) are closed,
+bounded and convex.
+</p>
+
+<p>
+Let \(\mathcal{K}\) be a closed, bounded and convex set. For all
+\(\mathcal P_1, \mathcal P_2\) in \(\mathcal L\), and all \(\alpha\) in
+\([0, 1]\) the following holds:
+\[\alpha  \mathcal{P}_1 + (1-\alpha) \mathcal{P}_2 \in \mathcal{K}\]
+</p>
+
+<p>
+For all behaviours \(\mathcal P \in \mathcal K\)
+\[\exists \mathbf{s} \in \mathbb{R}^t,\  S_k \in \mathbb{R} ,\ \  \mathbf{s}\cdot\mathcal{P} \leq S_k\]
+</p>
+
+<p>
+For the local set \(\mathcal{L}\), this type of inequalities are called
+<i>Bell inequalities</i> and it is said to be violated by a behaviour
+\(\mathcal{P'} \notin \mathcal{L}\) whenever
+\[\mathbf{s}\cdot\mathcal{P'} > S_l\]
+</p>
+
+<p>
+Let \(\, \mathbf{s}\,\cdot\,\mathcal{P} \leq S_l\) be a valid Bell
+inequality for the polytope \(\mathcal{L}\). Then
+\(F = \{ \mathcal{P}\in \mathcal{L}|\mathbf{s}\cdot \mathbf{p} = S_l\}\)
+is a face of \(\mathcal{L}\). Besides, if
+\(\dim\,F = \dim\, \mathcal{L} - 1\), F is called a facet of \(\mathcal{L}\)
+and the corresponding inequalities are called facet Bell inequalities.
+</p>
+
+<p>
+Hence, Bell inequalities characterize the local set \(\mathcal{L}\), and
+thus help to determine whether a behaviour \(\mathcal{P}\) is local or
+not. Moreover, Tsirelson's bound provides a characterization of the
+quantum set \cite{cirelson_quantum_1980}. It is important to stress that
+since the set of quantum behaviours is not a polytope, there exist
+infinitely many Tsirelson bounds.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-self-testing-of-quantum-states" class="outline-3">
+<h3 id="self-testing-of-quantum-states">Self-testing of quantum states</h3>
+<div class="outline-text-3" id="text-self-testing-of-quantum-states">
+<p>
+Self-testing is a method to recover information on the physics of a
+quantum experiment, in a black box scenario, i.e. without needing to
+have or to trust a model of the experiment
+\cite{2020-self-testing-a-review}.
+</p>
+
+<p>
+A general method to perform self-testing is now described.
+</p>
+
+<p>
+The correlations \(p(a,b|x,y)\) self-test the state
+\(\ket{\Phi^+}_{A^{'}B^{'}}\) if for any state \(\rho_{AB}\) compatible with
+\(p(a,b|x,y)\) and for any purification \(\ket{\Psi}_{ABP}\) of \(\rho_{AB}\),
+there exists a local isometry
+\[\mathbf{\Phi}_A \otimes \mathbf{\Phi}_B : \mathcal{H}_A \otimes \mathcal{H}_B
+    \longrightarrow \mathcal{H}_{A^{'}\Bar{A} } \otimes \mathcal{H}_{B^{'}\Bar{B}} \text{ ,}\]
+such that
+\[\mathbf{\Phi}_A \otimes \mathbf{\Phi}_B \otimes \mathbbm{1}_P  \left[  \ket{\Psi}_{ABP}
+    \right] =  \ket{\Psi^{'}}_{A^{'}B^{'}} \otimes \ket{\xi}_{\Bar{A}\Bar{B}P}\]
+[prop:self-test<sub>states</sub>]
+</p>
+
+<p>
+The extremal points of \(\mathcal{Q}\) can be used to self-test both a
+state and a measurement \cite{bell-viol-self-test} and these extremal
+points are known to be candidates for observing a maximal violation of a
+Bell inequality.
+</p>
+
+<p>
+In most cases, it is possible to explicitly construct an isometry
+\(\mathbf{\Phi}\) mapping the physical state \(\ket{\Psi}\) to the reference
+state \(\ket{\Phi^+}\) by using a partial Swap gate. For instance, let's
+focus on a Bell scenario with \(x,y\in\{0,1\}\). The main idea is that if
+the operators anticommute i.e., \(\{A_0,A_1\}=\{B_0,B_1\}=0\), we can
+construct operators \(Z_A,X_A,Z_B,X_B\) whose actions are analogous to
+those of the operators used in the 2-qubit Swap gate
+</p>
+
+<p>
+\[\begin{aligned}
+        Z_A = \dfrac{1}{\sqrt{2}} (A_0 +A_1)\ \ &\  \ Z_B = B_0 \\
+        X_A = \dfrac{1}{\sqrt{2}} (A_0 +A_1)\ \ &\ \ Z_B = B_0.
+    \end{aligned}\]
+</p>
+
+<p>
+Hence, if \(\ket{\Psi}\) corresponds to the reference state up to an
+isometry, the Swap gate as pictured in enables the construction of the
+isometry
+\[\mathbf{\Phi}\left[ \ket{\Psi}_{ABP}\right] = \ket{\Phi^+}_{A{'}B{'}} \otimes \ket{\xi}_{ABP} \text{ ,}\]
+where \(\ket{\Psi}\) is a purification of the physical state, and \(A{'}\)
+and \(B{'}\) are the Hilbert spaces of the ancillary qubits. As such, the
+reference state is recovered in the ancillary space.
+</p>
+</div>
+</div>
+
+<div id="outline-container-chsh-correlations" class="outline-3">
+<h3 id="chsh-correlations">CHSH correlations</h3>
+<div class="outline-text-3" id="text-chsh-correlations">
+<p>
+Consider outputs \(a,b \in \{-1,1\}\), and inputs \(x,y \in \{0,1\}\).
+Letting \(\{A_x\}\) be the set of Alice's measurement observables (where
+\(A_x = M_{1|x} - M_{-1|x}\) with \(M_{a|x}\) the measurement operators),
+and \(\{B_y\}\) the one of Bob, one can express the expected correlations
+as \[\begin{aligned}
+    \bra{\Phi} A_0\otimes B_0 \ket{\Phi} & = \dfrac{1}{\sqrt{2}} &\
+    ,\  & \bra{\Phi} A_0\otimes B_1 \ket{\Phi} & = &\ \dfrac{1}{\sqrt{2}}  \\
+    \bra{\Phi} A_1\otimes B_0 \ket{\Phi} & = \dfrac{1}{\sqrt{2}} &\
+    ,\  & \bra{\Phi} A_1\otimes B_1 \ket{\Phi} & = & - \dfrac{1}{\sqrt{2}}  \\
+    \bra{\Phi} A_x\otimes \mathbbm{1_B} \ket{\Phi} & = 0\   \forall x &\ ,\
+    & \bra{\Phi} \mathbbm{1_A}\otimes B_y \ket{\Phi} & = & \ 0 \  \forall y \text{.}
+\end{aligned} \label{eq:corr_chsh}\]
+</p>
+
+<p>
+These correlations can be obtained if Alice and Bob share the quantum
+state
+\[\ket{\Phi} = \dfrac{1}{\sqrt{2}} \big( \ket{00} +\ket{11}\big) \text{ ,}\]
+and if Alice measures \(A_0 = X\) and \(A_1 = Z\), and Bob measures
+\(B_0 = (Z+X)/\sqrt{2}\) and \(B_1 = (X-Z)/\sqrt{2}\). These operators can
+be related to the measurement operators considered in by
+\[A_x = M_{1|x} - M_{-1|x} \; \text{and} \; B_y = N_{1|y} - N_{-1|y}\]
+and therefore, with , we can write
+\[\bra{\Phi} A_{x} \otimes B_{y} \ket{\Phi} = \sum_{a,b} ab \ p(a,b|x,y)
+    \label{eq:corr_to_prob}\] and the vector
+\(\mathcal P = \left\{ p(a,b|x,y)\right\}\) can be derived by solving the
+systems of equations defined by the previous Equations.
+</p>
+
+<p>
+With local correlations, the following Bell inequality stands
+\cite{bell_einstein_1964} \[\label{eq:chsh}
+     \left< A_0 B_0\right> + \left< A_1 B_0\right> + \left< A_0 B_1 \right> - \left< A_1 B_1 \right>  \leq 2,\]
+which will be referred to as the CHSH inequality.
+</p>
+
+<p>
+On the other hand, with a quantum behaviour the Tsirelson's inequality
+is always fulfilled, and \cite{cirelson_quantum_1980}
+\[\left< A_0 B_0\right> + \left< A_1 B_0\right> + \left< A_0 B_1 \right>  - \left< A_1 B_1 \right>  \leq 2 \sqrt{2},\]
+for which the upper bound, called the Tsirelson's bound, is achieved by
+the previous shared state and measurement.
+</p>
+
+<p>
+Therefore, the quantum strategy mentioned above achieves a maximum
+violation of the Bell ,
+</p>
+</div>
+</div>
+
+<div id="outline-container-mayers-yao-correlations" class="outline-3">
+<h3 id="mayers-yao-correlations">Mayers-Yao correlations</h3>
+<div class="outline-text-3" id="text-mayers-yao-correlations">
+<p>
+For Mayers-Yao's self-test, the inputs are \(x,y \in \{0,1,2\}\), the
+possible outputs \(a,b \in \{0,1\}\) and the expected correlations
+</p>
+
+<p>
+\[\label{eq:mayers-yao-correlations}
+\begin{aligned}
+ &\bra{\Phi} A_z \otimes B_z \ket{\Phi} & = 1 &\ \forall z \in \{0,1,2\} \\
+\bra{\Phi} A_x \otimes \mathbbm{1} \ket{\Phi}  = & \bra{\Phi} \mathbbm{1} \otimes B_y \ket{\Phi} & = 0  &\ \forall x,y  \\
+\bra{\Phi} A_0 \otimes B_1 \ket{\Phi} = & \bra{\Phi} A_1 \otimes B_0 \ket{\Phi} & = 0  &\\
+\bra{\Phi} A_0 \otimes B_2\ket{\Phi} = & \bra{\Phi} A_1 \otimes B_2 \ket{\Phi} & = \dfrac{1}{\sqrt{2}} &\\
+\bra{\Phi} A_2 \otimes B_0 \ket{\Phi} = & \bra{\Phi} A_2 \otimes B_1 \ket{\Phi} & = \dfrac{1}{\sqrt{2}} \text{.} & \\
+\end{aligned}\]
+</p>
+
+<p>
+These correlations can be achieved whenever Alice and Bob share the
+state
+\[\ket{\Phi} = \dfrac{1}{\sqrt{2}} \left( \ket{00} +\ket{11}\right)\text{,}\]
+and their measurement observables are \[\begin{aligned}
+        A_0 = X_A   \ , \  A_1 = Z_A  , \ A_2 = \dfrac{1}{\sqrt{2}}  (X_A + Z_A), \\
+        B_0 = X_B   , \  B_1 = Z_B  \ , \ B_2 = \dfrac{1}{\sqrt{2}}  (X_B + Z_B) .\\
+\end{aligned}\]
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec:nonloc-detection" class="outline-2">
+<h2 id="sec:nonloc-detection">Non-locality detection</h2>
+<div class="outline-text-2" id="text-sec:nonloc-detection">
+<p>
+According to the Propositions, it is possible to
+detect a non-local behaviour using linear programming (see ).
+</p>
+</div>
+
+<div id="outline-container-primal-LP" class="outline-3">
+<h3 id="primal-LP">Linear Programming formulation</h3>
+<div class="outline-text-3" id="text-primal-LP">
+<p>
+Let \(\mathcal P\) be the behaviour for which one want to learn whether it
+is local, and let \(\mathbbm{1}\) be the behaviour corresponding to the
+random outcome strategy. Observe that \(\mathbbm{1}\) is a local
+behaviour. One can test if a behaviour \(\mathcal P\) is nonlocal by
+solving the following linear program $$\label{eq:primal}
+    \begin{aligned}
+            &amp; min<sub>&alpha;,\overrightarrow{\mu}</sub> \; &alpha; <br />
+	  s.t.  &amp;
+</p>
+\begin{cases}
+    (1-\alpha) \mathcal{P}+ \alpha \mathbbm{1} & \leq \sum_\lambda\mu_\lambda \mathbf{d_\lambda} \\
+    \sum_\lambda \mu_\lambda & = 1 \\
+    \alpha & \leq 1 \\
+    \mu_\lambda,\ \alpha & \geq 0 \quad \forall \lambda
+\end{cases}
+<p>
+    \end{aligned}\[ that expresses how much $\mathcal P$ can be mixed
+with a random behavior to become local. In the case of an optimal value
+of $\alpha^* = 0$, $\mathcal{P}$ is a local behaviour since it can be
+written as
+\]\mathcal{P} =  &sum;<sub>&lambda;</sub> &mu;<sup>*</sup><sub>&lambda;</sub> \mathbf{d_\lambda} \text{ ,}$$
+where the \(\mathbf{\mu^*_\lambda}\) are the coefficients found at the
+optimum; whereas an optimal value of \(\alpha^* > 0\) means that
+\(\mathcal{P}\)
+</p>
+</div>
+</div>
+
+<div id="outline-container-CHSH_primal" class="outline-3">
+<h3 id="CHSH_primal">CHSH correlations</h3>
+<div class="outline-text-3" id="text-CHSH_primal">
+<p>
+The behaviour obtained by solving the system of equations induced by the
+quantum correlations exposed in is
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">(1, 1)</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">(0,0)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(\frac{\cos^2(\pi/8)}{2}\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">(0,1)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(\frac{\cos^2(\pi/8)}{2}\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">(1,0)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(\frac{\cos^2(\pi/8)}{2}\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">(1,1)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(\frac{\sin^2(\pi/8)}{2}\)</td>
+</tr>
+</tbody>
+</table>
+<p>
+and solving with the aforementioned behaviour gives an optimal value of
+\[\alpha^*_{CHSH} \approx 1 - \frac{1}{\sqrt{2}} \text{ .}\]
+</p>
+</div>
+</div>
+
+<div id="outline-container-mayers-yaos-correlations" class="outline-3">
+<h3 id="mayers-yaos-correlations">Mayers-Yao's correlations</h3>
+<div class="outline-text-3" id="text-mayers-yaos-correlations">
+<p>
+Similarly, the behaviour obtained by solving the system of equations
+induced by the quantum correlations shown in is given in and gives an
+optimal value of \[\label{eq:opt-primal-my}
+    \alpha^*_{MY} \approx 0.1715 \text{ .}\]
+</p>
+
+<p>
+<a id="orgdb9d051"></a>
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">(1,1)</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((0,0)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(1/2\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((0,1)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(1/4\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((0,2)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(\frac{\cos^2(\pi/8)}{2}\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((1,0)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(1/4\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((1,1)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(1/2\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((1,2)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(\frac{\cos^2(\pi/8)}{2}\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((2,0)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(\frac{\cos^2(\pi/8)}{2}\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((2,1)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(\frac{\cos^2(\pi/8)}{2}\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((2,2)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(1/2\)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div id="outline-container-seq:ineq-dual" class="outline-2">
+<h2 id="seq:ineq-dual">Inequalities from duality</h2>
+<div class="outline-text-2" id="text-seq:ineq-dual">
+<p>
+The linear program for non-locality detection also comes in a useful
+dual form
+</p>
+
+<p>
+$$\label{eq:dual}
+    \begin{aligned}
+          &amp; max<sub>&gamma;,\mathbf{y}</sub> \; \mathcal{P}&sdot; \mathbf{y} + &gamma; - &omega;<br />
+     s.t. &amp;
+</p>
+\begin{cases}
+    (\mathcal{P} - \mathbbm{1}) \cdot \mathbf{y} - \omega & \leq 1 \\
+    \gamma + \mathbf{d_\lambda} \cdot \mathbf{y} & \leq 0 \ \ \forall \lambda \\
+    \mathbf{y} \in \mathbb{R}_+^n, \gamma \in \mathbb{R}, \omega \geq 0
+\end{cases}
+<p>
+\end{aligned}\[ that can be interpreted as a way to express Bell
+inequalities. Letting $\delta^*$ be the optimal objective value, we can
+write
+\]\mathcal{P}&sdot; \mathbf{y^*} \ &le; \  &delta;<sup>*</sup> + &omega;<sup>*</sup> - &gamma;<sup>*</sup>\text{ .}
+\label{eq:ineq_dual_1}$$
+</p>
+
+<p>
+Given that an inequality can be multiplied by a positive value, there
+exist many different inequalities we could derive, since
+\[\begin{aligned}
+        &\mathcal{P}\cdot \mathbf{y} &\ \leq \ &  \delta^* + \omega - \gamma \\
+        \Leftrightarrow \hspace{0.2cm} & \ \ M  \,( \mathcal{P}\cdot \mathbf{y} )&\ \leq \ &M\, (\delta^* + \omega - \gamma ) \ \ \forall M \in \mathbb{R}^+ \text{ .}
+    \end{aligned}\]
+</p>
+</div>
+
+<div id="outline-container-chsh-correlations-1" class="outline-3">
+<h3 id="chsh-correlations-1">CHSH correlations</h3>
+<div class="outline-text-3" id="text-chsh-correlations-1">
+<p>
+The optimal solution is given by \(\mathbf{y^*_{CHSH}}\) in ,
+\(\gamma^*_{CHSH} \approx - 2 \sqrt{2}\) and \(\omega^*_{CHSH} =0\).<br />
+Therefore, we obtain the following Bell inequality
+\[\mathcal{P} \cdot \mathbf{y^*_{CHSH}} \ \lesssim\ 3.1213
+    \label{eq:chsh_ineq1}\] Multiplying by
+\[M = \dfrac{\gamma^*_{CHSH}}{\delta^* + \omega^*_{CHSH} - \gamma^*_{CHSH}}\]
+gives
+\[\mathcal{P} \cdot \mathbf{z^*_{CHSH}} \ \lesssim\ 2 \sqrt{2} \text{ ,}\]
+where \[\mathbf{z^*_{CHSH}} = M \, \mathbf{y^*_{CHSH}} \text{ .}\]
+</p>
+
+<p>
+<a id="org1ffe76b"></a>
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((1,1)\)</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((0,0)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(1.414\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((0,1)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(0\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((1,0)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(1.414\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((1,1)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(0\)</td>
+</tr>
+</tbody>
+</table>
+<p>
+Using this dual with a local strategy such as
+</p>
+
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((1,1)\)</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((0,0)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(0\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((0,1)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(0\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((1,0)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(1/2\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((1,1)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(0\)</td>
+</tr>
+</tbody>
+</table>
+<p>
+we obtain optimal values \(\gamma_{loc}^* = -1\) and \(\omega_{loc}^* = 0\).
+Hence, if \(\mathcal{P}\) is local, we have
+\[\mathcal{P}_{loc} \cdot \mathbf{y^*_{loc}} \leq 2\]
+</p>
+</div>
+</div>
+
+<div id="outline-container-mayers-yaos-correlation" class="outline-3">
+<h3 id="mayers-yaos-correlation">Mayers-Yao's correlation</h3>
+<div class="outline-text-3" id="text-mayers-yaos-correlation">
+<p>
+The optimal solution of the is given by \(\mathbf{y^*_{MY}}\) in ,
+\(\gamma^*_{MY} \approx 3.313\) and \(\omega^*_{MY} =0\). Besides, we can
+notice that \(\gamma^*_{MY} \approx 8 \sqrt{\alpha^*_{MY}}\), where
+\(\alpha^*_{MY}\) comes from . Therefore, we obtain the following Bell
+inequality \[\mathcal{P} \cdot \mathbf{y^*_{MY}} \ \lesssim \ 3.49\]
+</p>
+
+<p>
+<a id="org3236c12"></a>
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((1,1)\)</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((0,0)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(0\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((0,1)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(0\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((0,2)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(0\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((1,0)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(0\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((1,1)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(0\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((1,2)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(1.657\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((2,0)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(0\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((2,1)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(0\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((2,2)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(1.657\)</td>
+</tr>
+</tbody>
+</table>
+<p>
+With a local strategy, we obtain again the following inequality
+\[\mathcal{P}_{loc} \cdot \mathbf{y^*_{loc}} \lesssim 2\]
+</p>
+
+<p>
+From the optimal solution \(\mathbf{y^*_{MY}}\) obtained with the quantum
+correlations shown in , one can notice that the input \(x=0\) on Alice's
+side is never used. Therefore, one could assume that Alice needs only
+two measurements instead of three to reproduce Mayers-Yao's
+correlations. Similarly, it can be noticed that the input \(y=1\) is never
+used by Bob in the optimal strategy.
+</p>
+</div>
+</div>
+
+<div id="outline-container-restricted-inputs-on-alice-side-for-mayers-yaos-self-test" class="outline-3">
+<h3 id="restricted-inputs-on-alice-side-for-mayers-yaos-self-test">Restricted inputs on Alice side for Mayers-Yao's self-test</h3>
+<div class="outline-text-3" id="text-restricted-inputs-on-alice-side-for-mayers-yaos-self-test">
+<p>
+In this section, Bob still has inputs \(y \in \{0,1,2\}\) but Alice's
+inputs are restricted to \(x
+\in \{1,2\}\), meaning that Alice only measures \(A_0=A_1=Z\) and
+\(A_2 = (X+Z)/\sqrt{2}\). Hence, we have less correlations to consider in
+the linear programs and the basis \(\{p(a,b|x,y)\}\) will have a smaller
+dimension, but the primal and the dual keep the same form.
+</p>
+
+<p>
+The primal gives
+\(\alpha^*_{MY,\{1,2;0,1,2\}} \approx 0.1715 \approx \alpha^*_{MY}\) and
+the dual gives \(\gamma^*_{MY,\{1,2;0,1,2\}} \approx 3.313\) ,
+\(\omega^*_{MY,\{1,2;0,1,2\}} =0\) and \(\mathbf{y^*_{MY,\{1,2;0,1,2\}}}\)
+in .
+</p>
+
+<p>
+<a id="orgaaa39fd"></a>
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((1,1)\)</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((1,0)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(1.657\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((1,1)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(0\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((1,2)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(0\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((2,0)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(0\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((2,1)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(0\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((2,2)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(1.657\)</td>
+</tr>
+</tbody>
+</table>
+<p>
+with the inputs on Alice's side restricted to \(\{1,2\}\)
+</p>
+
+<p>
+The results are almost exactly the same as before, except that the
+strategy is modified: given an input \((x,y)\), the outputs \((a,b)\) are
+not the same as before. However, we still find the same objective value
+\(\alpha^*_{MY}\) and the same Bell inequality.<br />
+In , one can notice that Bob does not use the input \(y=1\), i.e the
+measurement \(Y_1=Z\). However, restricting also the inputs on Bob's side
+to \(y \in \{0,2\}\) does not give exactly the same result. We obtain
+\(\alpha^*_{MY,\{1,2;0,2\}} \approx 0.1715 \approx \alpha^*_{MY}\) with
+the primal and the dual gives \(\gamma^*_{MY,\{1,2;0,2\}} \approx 2.485\)
+, \(\omega^*_{MY,\{1,2;0,2\}} =0\) and \(\mathbf{y^*_{MY,\{1,2;0,2\}}}\) in
+.
+</p>
+
+<p>
+<a id="org6e43c3f"></a>
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((1,1)\)</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((1,0)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(0\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((1,2)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(0.828\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((2,0)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(0.828\)</td>
+</tr>
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\((2,2)\)</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">\(0.828\)</td>
+</tr>
+</tbody>
+</table>
+<p>
+with the inputs on Alice's side restricted to \(x \in \{1,2\}\) and on
+Bob's side to \(y \in
+\{0,2\}\).
+</p>
+
+<p>
+Therefore, even though the optimal strategy is changed, the correlations
+considered are still nonlocal for the restricted inputs
+\(x\in\{1,2\}\),\(y\in\{0,2\}\).
+</p>
+</div>
+</div>
+
+<div id="outline-container-alternative-dual-formulation" class="outline-3">
+<h3 id="alternative-dual-formulation">Alternative dual formulation</h3>
+<div class="outline-text-3" id="text-alternative-dual-formulation">
+<p>
+From the numerical results, we observed that the first constraint of the
+is always fulfilled and substituting the inequality by an equality
+yields the same results. However, this modified primal form provides an
+alternative dual for detecting non-locality
+</p>
+
+<p>
+$$\label{eq:dual2}
+    \begin{aligned}
+        &amp; max<sub>&gamma;,\mathbf{w}</sub> \; - \mathcal{P}&sdot; \mathbf{w} +
+        &gamma; - &omega;  <br />
+    s.t. &amp;
+</p>
+\begin{cases}
+    (\mathbbm{1} - \mathcal{P}) \cdot \mathbf{w}  - \omega & \leq  1\\
+    \gamma + \mathbf{d_\lambda} \cdot \mathbf{w} &\ \leq  0, \ \forall
+    \lambda\\
+    \mathbf{w} \in \mathbb{R}^n ,\ \gamma \in \mathbb{R}, \omega & \geq 0
+\end{cases}
+<p>
+\end{aligned}$$
+</p>
+
+<p>
+The results from CHSH and Mayers-Yao exhibit that one always has at the
+optimum \[\begin{aligned}
+        \mathcal{P} \cdot \mathbf{w}^* & =  -\alpha^*, \\
+        \mathbbm{1} \cdot \mathbf{w}^* & =  1 - \alpha^*
+    \end{aligned}\] and thus, multiplying the first constraint of the
+primal by \(\mathbf{w}^*\), one finds that
+</p>
+
+<p>
+\[\sum_\lambda \mu^*_\lambda \mathbf{d_\lambda} \cdot \mathbf{w}^* = 0 \text{ ,}\]
+which means that the solution \(\mathbf{w}^*\) of the dual problem is
+orthogonal to the optimal convex sum of deterministic behaviours.
+</p>
+
+<p>
+According to the of <i>strong duality</i>, the optimal objective value is the
+same as the one from the primal and the following inequality is derived
+\[-\mathbf{w}^* \cdot \mathcal{P} \leq \alpha^* + \omega^* - \gamma^*\]
+The main difference with is that the vector \(\mathbf{w^*}\) belongs to
+\(\mathbb{R}^n\).
+</p>
+
+<p>
+For CHSH, we find
+\(-\mathbf{w^* _{CHSH}}\cdot \mathcal{P} \leq \alpha^*_{CHSH}\) and for
+Mayers-Yao's,
+\(-\mathbf{w^*_{MY}} \cdot \mathcal{P} \leq  \alpha^*_{MY}\).
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec:noise" class="outline-2">
+<h2 id="sec:noise">Robustness against white noise</h2>
+<div class="outline-text-2" id="text-sec:noise">
+<p>
+The aim of this section is to study robustness against the addition of
+white noise in a communication channel. The noise of the quantum channel
+is denoted by \(\alpha\), and thus we define the accuracy of the channel
+by \(\mathcal{V} = 1 -
+\alpha\), e.g. and accuracy of \(\mathcal{V} = 1\) corresponds to a
+lossless quantum channel. In experiments using a singlet state generated
+by two entangled photons, the noise can originate from imperfect
+operations on the photon source and detectors. Hence generating a pure
+singlet state is very difficult in practice.<br />
+This noise effect can be modeled by the following mixed state, called a
+Werner state, \[\label{eq:werner-state}
+    \rho = \mathcal{V} \ket{\Phi}\bra{\Phi} + (1-\mathcal{V}) \mathbbm{1}\text{ ,}\]
+where \(\ket{\Phi}\) is a maximally entangled state and \(\mathbbm{1}\) a
+fully randomized behaviour.
+</p>
+
+<p>
+The aim is to check for which amount of noise this state produces
+nonlocal behaviour in CHSH and Mayers-Yao scenario. The study of the
+robustness against white noise can be done by two different manners :
+</p>
+
+<ol class="org-ol">
+<li>Start with \(\mathcal{V} = 1\) and a given precision \(\delta\). While
+the result of the primal is an \(\alpha > 0\), i.e., the behaviour
+\(\mathcal P\) generated by \(\rho\) and ideal measurements is non local,
+set \(\mathcal{V} = \mathcal{V} - \delta\). This simple algorithm is
+useful to draw a curve as shown in , but requires to solve
+\(O(\delta^{-1})\) nonlinear problems, which is not time-wise
+negligible.</li>
+
+<li>Knowing that the visibility \(\mathcal{V}\) is in the range \([0, 1]\),
+and that there exists a minimal value \(\mathcal{V}^*\) such that for
+all \(\mathcal{V} > \mathcal{V}^*\), the behaviour \(\mathcal P\)
+generated with state \(\rho\) ( ) and ideal measurements is not local,
+one can use a binary search to find \(\mathcal{V}^*\) . This allows to
+proceed with a logarithmic number of iterations and an arbitrary
+large precision e.g., a twenty-digit accuracy with only 55
+iterations.</li>
+</ol>
+
+<p>
+The implementation of the first method yielded the curves represented in
+.
+</p>
+
+<p>
+[fig:curve-noise]
+</p>
+
+<p>
+Concerning the CHSH's correlations, we obtained
+\[\mathcal V ^*_{CHSH} \approx 0.71  \approx \frac{1}{\sqrt{2}}\text{ ,}\]
+while comparatively, Mayer-Yao's correlations yield
+\[\mathcal{V}^*_{MY} \approx 0.82\text{ .}\] As a conclusion, the
+maximally entangled state is more robust to noise for CHSH correlations
+than for Mayers-Yao's correlations. The value \(\mathcal{V}^*\) can be
+interpreted as the visibility lower bound, meaning that if the amount of
+noise is lower than \(1-\mathcal{V}^*\), the violation of a Bell
+inequality remains detectable in an experiment.
+</p>
+
+<p>
+Besides, experiments reproducing the maximum violation of a Bell
+inequality for the CHSH game have been realized without the need of
+calibrated devices \cite{shadbolt2012}, and the experimental visibility
+they observed matches with our result.
+</p>
+
+<p>
+In each case, one can notice that \(\mathcal{V}^* = 1 - \alpha^*\) where
+\(\alpha^*\) was the optimal objective obtained in . The study of the
+robustness is equivalent to the primal detecting non-local behaviour
+since it was written using a convex combination of the behaviour and a
+fully randomized behaviour, which is actually a white noise. Therefore,
+the optimal value \(\alpha^*\) of the primal corresponds to the maximal
+amount of noise tolerated for violating the Bell inequality. Still, this
+study would be necessary whenever one wants to study different kinds of
+noise or losses arising from experimental setups: specific noises can be
+modeled as specific local behaviours, instead of only white noise
+\cite{shadbolt2012}.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec:non-linear" class="outline-2">
+<h2 id="sec:non-linear">Non-linear programming</h2>
+<div class="outline-text-2" id="text-sec:non-linear">
+<p>
+Considering , one can transform the vector \(\mathcal P\) into a vector of
+variables. This converts the initial program into a nonlinear program,
+more specifically a quadratic program, and provides as a result a
+behavior \(\mathcal P\). This kind of transformation adds new difficulties
+for the resolution, such as non-convex constraints, but all of these are
+left over to the solver.
+</p>
+</div>
+
+<div id="outline-container-finding-the-optimal-probability-distribution" class="outline-3">
+<h3 id="finding-the-optimal-probability-distribution">Finding the optimal probability distribution</h3>
+<div class="outline-text-3" id="text-finding-the-optimal-probability-distribution">
+<p>
+Adding the constraints for \(\mathcal P\) to be a probability vector
+yields the following nonlinear program $$\label{eq:primal-nl}
+	\begin{aligned}
+			  &amp; max \; &beta;<sub>CHSH</sub><br />
+		s.t.  &amp;
+</p>
+\begin{cases}
+	(1-q) \mathcal P + q \mathbbm{1}
+        & = \sum_\lambda \mu_\lambda \mathbf{d}_\lambda \\
+	\sum_\lambda \mu_\lambda & = 1 \\
+    \sum_{a,b} p(a,b|x,y) & = 1, \; \forall (x,y) \in \{0,1\}^2 \\
+	q & \leq 1 \\
+	\mu_\lambda \geq 0 \; \forall \lambda, \; q \geq 0
+\end{cases}
+<p>
+	\end{aligned}$$ that one could solve to find the maximal value for
+\(\beta_{CHSH}\), whose value is the given by the left-hand side of .
+However, it must be remembered that the maximal value one can obtain
+doing this is \(\beta_{CHSH} = 4\), where the resulting probability
+distribution describes a behavior belonging to
+\(\mathcal{NS}\setminus \mathcal{Q}\).
+</p>
+
+<p>
+Finding the boundaries between the sets \(\mathcal{Q}\) and \(\mathcal{NS}\)
+i.e., inequalities violated by behaviors in
+\(\mathcal{NS}\setminus \mathcal{Q}\), is an open problem when considering
+arbitrary values of \(\Delta\) and \(m\). For bipartite scenarios with
+binary outcomes (\(\Delta = 2\), \(m = 2\)),
+</p>
+
+<p>
+$$\label{eq:bound-ns-q}
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="org-left" />
+</colgroup>
+<tbody>
+<tr>
+<td class="org-left">\text{asin}\braket{A_0 B_0}</td>
+</tr>
+</tbody>
+</table>
+<ul class="org-ul">
+<li>\text{asin}\braket{A_0 B_1}</li>
+<li>\text{asin}\braket{A_1 B_0}</li>
+<li>\text{asin}\braket{A_1 B_1} | &le; &pi;,$$ introduced by</li>
+</ul>
+<p>
+\citeauthor{Masanes2003NecessaryAS} in \cite{Masanes2003NecessaryAS},
+provides an explicit description of behaviours belonging to
+\(\mathcal{Q}\). Moreover, the two sides are equal whenever the behavior
+maximally violates the CHSH .
+</p>
+
+<p>
+While simple to understand, this constraint cannot be enforced by
+Gurobi, that cannot handle constraints described by trigonometric
+functions. Nonetheless, it will only be used to check whether a behavior
+stays in \(\mathcal{Q}\).
+</p>
+
+<p>
+Taking into consideration both and yields the following procedure to
+find the maximal value of \(\beta_{CHSH}\)
+</p>
+
+<p>
+\(\delta\) is the precision, roughly corresponds to the number of number
+of significant digits \(\Pi = 2\) is the starting upper bound
+\(\Pi \leftarrow \Pi + \delta\) <i>solve with constraint
+\(\beta_{CHSH} \leq \Pi\)</i> $\mathcal P$/: the optimal probability
+distribution/
+</p>
+
+<p>
+[alg:beta-optimal-chsh]
+</p>
+
+<p>
+The numerical result is, indeed, arbitrary close to \(2 \sqrt 2\)
+depending on \(\delta\). One should note that not such equation as is
+known for the case \(\Delta = 2\) and \(m=3\), but it is possible to use the
+generalized CHSH inequality as depicted by
+\citeauthor{wehner_tsirelson_2006} in \cite{wehner_tsirelson_2006}. We
+could have use this for the case \(\Delta = m = 2\) even though it will
+yield the same result, but we thought it was more interesting to try at
+least once another formulation. Considering the case \(\Delta = 2\) and
+\(m=3\), we indeed obtained results arbitrary close to \(3 \sqrt 3\), and
+the associated probability distribution.
+</p>
+</div>
+</div>
+
+<div id="outline-container-making-a-behavior-local" class="outline-3">
+<h3 id="making-a-behavior-local">Making a behavior local</h3>
+<div class="outline-text-3" id="text-making-a-behavior-local">
+<p>
+Looking for the optimal probability distribution with a non-linear
+approach led us to a side work, that is, from knowing how many elements
+of the behavior one can infer that the behavior is local. Taking into
+consideration that a behavior with \(\Delta = m = 2\) is local if and only
+if \(\beta_{CHSH} \leq 2\), it suffices to set \(k\) probabilities of, for
+instance, the behavior that maximally violates the CHSH inequality, and
+solving , where the maximization becomes a minimization. By doing this,
+if the optimal value is a \(\beta^*_{CHSH} \leq 2\), then it is possible
+to find a full behavior that is local, and its elements are given in the
+same time by the solver. Otherwise, one can be sure that it is not
+possible to make the behavior local.
+</p>
+
+<p>
+The results of the implementation with Gurobi yielded on one hand that
+with \(k =
+4\), where for each \((x,y)\), a single \(p(a,b|x,y)\) is fixed, it is not
+anymore possible to find values for the other probabilities such that
+the behavior is local, in addition, it only results on the behavior that
+gives \(\beta_{CHSH} = 2
+\sqrt 2\), since it removes all degrees of freedom for the other
+probabilities in the light of the normalization constraints ( ) and ( ).
+</p>
+
+<p>
+Moreover, fixing only one expectation \(\braket{A_x B_y}\) gives an
+optimal of 0 with \(\beta_{CHSH} = 0\), while fixing an arbitrary number
+of probabilities among up to 3 expectations yields a local behavior,
+with an optimal 0, yet \(\beta_{CHSH} \approx 1.1213\).
+</p>
+
+<p>
+Besides, thanks to the implementation of , we were able to generate a
+behavior \(\mathcal P_{\Delta}\) whose CHSH value is $&beta;<sub>CHSH</sub> = 2
+</p>
+<ul class="org-ul">
+<li>&Delta;$, hence that violates the inequality with an arbitrary small</li>
+</ul>
+<p>
+precision \(\Delta\). It yielded for the both aforementioned cases exactly
+the same results.
+</p>
+
+<p>
+For the case of the Mayers-Yao's correlations, the same result is
+obtained when fixing one probability per expectation i.e., the resulting
+probability distribution stays unchanged. One the other hand, fixing 3
+arbitrary expectation also yields the same optimal objective as given in
+, enforcing the behavior to be in \(\mathcal{Q}\), while fixing only 2
+arbitrary expectations causes the behavior to be local.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec:math-opt" class="outline-2">
+<h2 id="sec:math-opt">Mathematical optimization</h2>
+<div class="outline-text-2" id="text-sec:math-opt">
+<p>
+Mathematical optimization aims to maximize (or minimize) the value of a
+function<sup><a id="fnr.1" class="footref" href="#fn.1" role="doc-backlink">1</a></sup>, under specific <i>constraints</i>. The simplest instance of
+mathematical optimization is <i>linear programming</i>, where both the
+objective and the constraints are <i>linear functions</i> of the variables.
+</p>
+
+<p>
+Both linear optimization and nonlinear optimization will be examined.
+</p>
+
+<p>
+For all the numerical simulations and the corresponding implementations,
+Gurobi \cite{gurobi} (a solver that can handle both linear and quadratic
+optimization problems) was used.
+</p>
+</div>
+
+<div id="outline-container-linear-optimization" class="outline-3">
+<h3 id="linear-optimization">Linear optimization</h3>
+<div class="outline-text-3" id="text-linear-optimization">
+<p>
+The field of linear optimization grew in tandem with the field of
+Computer Science, and the <i>"programmatic"</i> approach to linear
+optimization became very popular. As such, it will be explained via
+<i>linear programming</i> conventions and notations.
+</p>
+
+<p>
+A <i>linear program</i> is written as \[\begin{aligned}
+    \max \ or\ \min & \ z = c^T x \\
+    s.t. &
+    \begin{cases}
+    Ax & \leq b \\
+    x & \geq 0
+    \end{cases}\text{ ,}
+\end{aligned} \label{eq:general-primal}\] where
+\(c^t = ( c_1, \cdots, c_n )\) corresponds to the <i>objective function
+coefficients</i>, \(x^t = (x_1, \cdots, x_n)\) to the <i>decision variables</i>,
+\(b^t = (b_1, \cdots, b_m)\) to the <i>value of the constraints</i> and
+\[A =\begin{pmatrix}a_{11} & \cdots & a_{1n} \\ \hdots & \ddots & \hdots \\ a_{m1} & \cdots & a_{mn} \\ \end{pmatrix}\]
+to the <i>constraint coefficients</i>. Here, \(z\) corresponds to the
+<i>objective function</i>.
+</p>
+
+<p>
+The choice of inequality (\(\geq\) or \(\leq\)) is arbitrary, since one can
+always multiply both sides by a negative coefficient and obtain the
+other. To obtain an equality, one can use two separate inequalities.
+</p>
+
+<p>
+The problem formulated in is generally referred to as the <i>primal</i>
+problem, and its <i>dual</i> form is \[\begin{aligned}
+    \min \ or\ \max & \ z' = v^T b \\
+    s.t. &
+    \begin{cases}
+    A^Tv & \geq c \\
+    v & \geq 0
+    \end{cases} \text{ .}
+\end{aligned} \label{eq:dual-primal}\]
+</p>
+
+<p>
+In , the dual form is very important. To switch from one form to the
+other, is important since it states that the optimum of either objective
+form is the same. The following definitions are preliminaries for its
+introduction.
+</p>
+
+<p>
+\(x\in \mathbbm R^n\) is a feasible solution as long as it satisfies every
+constraints of the problem.
+</p>
+
+<p>
+\(x\in \mathbbm R^n\) is an optimal solution whenever it gives to \(z\) its
+optimal value.
+</p>
+
+<p>
+[th:strong-duality] If there exists a feasible solution for the primal,
+then the primal optimal objective and the dual optimal objective are
+equal.
+</p>
+
+<p>
+Lastly, an important thing to keep in mind is that in linear
+optimization, the optimal solution is often an extremal point of a
+polytope belonging to \(\mathbbm R^n\), whose facets are described by the
+constraints.
+</p>
+</div>
+</div>
+
+<div id="outline-container-nonlinear-optimization" class="outline-3">
+<h3 id="nonlinear-optimization">Nonlinear optimization</h3>
+<div class="outline-text-3" id="text-nonlinear-optimization">
+<p>
+Nonlinear optimization, unlike linear optimization, handles with
+problems where the constraints are nonlinear functions of the variables,
+such as exponentials, trigonometric, or polynomial functions. In , the
+formulated problems only deals with quadratic function, which are quite
+easy problem to solve.
+</p>
+
+<p>
+While linear optimization can be solved in polynomial time
+\cite{karmarkar_new_1984}, nonlinear optimization is, except for some
+cases, an NP-Hard problem \cite{hochbaum_complexity_2007}. In addition,
+there are fundamental issues with nonlinear optimization inherent in
+digital computer e.g., floating point arithmetic precision.
+Consequently, the techniques for finding the optimal solutions are not
+exposed here. The
+</p>
+</div>
+</div>
+</div>
+<div id="footnotes">
+<h2 class="footnotes">Footnotes: </h2>
+<div id="text-footnotes">
+
+<div class="footdef"><sup><a id="fn.1" class="footnum" href="#fnr.1" role="doc-backlink">1</a></sup> <div class="footpara" role="doc-footnote"><p class="footpara">
+the <i>objective function</i>
+</p></div></div>
+
+
+</div>
+</div></div>
+<div id="postamble" class="status">
+<p class="date">Created: 2022-05-10 Tue 11:26</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

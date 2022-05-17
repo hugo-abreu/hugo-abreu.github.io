@@ -1,0 +1,30 @@
+#+title: Hugo Abreu's webpage
+#+include: ./config/index-setup.org
+
+#+begin_right
+[[./img/hugo-2021.jpg]]
+#+end_right
+
+Hi! I'm a french/portuguese graduate student, currently studying in
+[[https://www.sorbonne-universite.fr/][Sorbonne Université]]'s [[https://sciences.sorbonne-universite.fr/en/formation-sciences/masters/master-informatique/parcours-IQ][Quantum Information]] Master's degree. Before
+that, I went to [[https://univ-psl.eu][PSL]]'s [[https://cpes.univ-psl.eu][CPES]], an amazing multidisciplinary undergraduate
+degree. I am interested in most things Mathematics, Computer Science,
+Quantum Information, Economics and Philosophy.
+
+This blog hosts some of my thoughts, posts and course notes. I will
+also keep tabs on interesting articles I find in the web, books I've
+read and movies I've seen.
+
+I also dabble in photography: mainly street photography; but also
+urban architecture and portraits, sometimes. I shoot mostly on film,
+on a lovely Mamiya RZ67, but for protests I prefer digital. You can
+find some of my photos on my [[https://flickr.com/photos/hugo-abreu][flickr]].
+
+For more information, you can take a look at my [[./reference/cv_hugo_abreu_04_22.pdf][CV]] in pdf or in the
+[[./about.html][About]] page.
+
+* Contact
+
+**email**: hugo [dot] abreu [at] etu [dot] sorbonne-universite [dot] fr
+
+**PGP**: [[./reference/gpg.txt][02545A82F37A04718B876903C5CCBE5BFDE7569A]]
