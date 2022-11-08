@@ -1,5 +1,7 @@
 #+title: Hugo Abreu's webpage
 #+include: ./config/index-setup.org
+#+options: toc:nil
+#+latex_header: \usepackage{braket}
 
 #+begin_right
 [[./img/hugo-2021.jpg]]
@@ -22,6 +24,92 @@ find some of my photos on my [[https://flickr.com/photos/hugo-abreu][flickr]].
 
 For more information, you can take a look at my [[./reference/cv_hugo_abreu_04_22.pdf][CV]] in pdf or in the
 [[./about.html][About]] page.
+
+#+HEADER: :file img/test1.svg
+#+HEADER: :exports results
+#+HEADER: :results output silent graphics file
+#+begin_src latex
+  \begin{tikzpicture}             %
+  \draw[->] (-3,0) -- (-2,0) arc[radius=0.5cm,start angle=-180,end angle=0] (-1,0) -- (1,0) arc[radius=0.5cm,start angle=180,end angle=0] (2,0) -- (3,0);
+  \filldraw (-1.5,0) circle[radius=1mm];
+  \filldraw (1.5,0) circle[radius=3mm];
+  \end{tikzpicture}
+#+end_src
+
+#+caption: figure test
+[[./img/test1.svg]]
+
+#+HEADER: :file img/test2.svg
+#+HEADER: :exports results
+#+HEADER: :results output silent graphics file
+#+begin_src latex
+  \usetikzlibrary{calc}
+  \usetikzlibrary{graphs,graphs.standard,quotes,arrows.meta}
+  \usetikzlibrary{shapes.geometric}
+  \usetikzlibrary{decorations}
+  \usetikzlibrary{arrows.meta}
+
+  \tikzset{%
+    add/.style args={#1 and #2}{to path={%
+   ($(\tikztostart)!-#1!(\tikztotarget)$)--($(\tikztotarget)!-#2!(\tikztostart)$)%
+    \tikztonodes}}
+  }
+    \begin{tikzpicture}
+      %%% Alice
+      % big square
+      \node (alice) [fill = gray!20, draw = gray!70,line width = 0.75mm, minimum size=2cm, draw, rounded corners = 0.15cm] at (-2.5,0.0) {};
+      % triangle
+      \node [isosceles triangle, isosceles triangle apex angle=90, line width=0.5mm, rotate=180, minimum size=0.25cm, draw, fill=teal!40] at (-2.15, 0.0) {};
+      % measuring device
+      \node (a_measure) [fill = teal!40, line width=0.5mm, minimum size=1cm, draw, rounded corners = 0.1cm] at (-2.70, 0.0) {$M_{a | x}$};
+      % receive x
+      \draw [-to, line width=0.5mm, rounded corners= 0.05cm] (-2.5, 1.5) node[above] {\large $x$} -- (-2.5, 0.85) -- (-2.70,0.85) -- (-2.70, 0.55);
+      % output a
+      \draw [-to, line width=0.5mm, rounded corners= 0.05cm] (-2.7, -0.55) -- (-2.7, -0.85) -- (-2.5, -0.85) -- (-2.5, -1.5) node[below] {\large $a$};
+
+      %%% Bob
+      % big square
+      \node [fill = gray!20, draw = gray!70,line width = 0.75mm, minimum size=2cm, draw, rounded corners = 0.15cm] at (2.5, 0.0) {};
+      % triangle
+      \node [isosceles triangle, isosceles triangle apex angle=90, line width=0.5mm, minimum size=0.25cm, draw, fill=purple!40] at (2.15, 0.0) {};
+      % measuring device
+      \node [fill = purple!40, line width=0.5mm, minimum size=1cm, draw, rounded corners = 0.1cm] at (2.7, 0.0) {$N_{b | y}$};
+      % receive y
+      \draw [-to, line width=0.5mm, rounded corners= 0.05cm] (2.5, 1.5) node[above] {\large $y$} -- (2.5, 0.85) -- (2.70,0.85) -- (2.70, 0.55);
+      % output b
+      \draw [-to, line width=0.5mm, rounded corners= 0.05cm] (2.7, -0.55) -- (2.7, -0.85) -- (2.5, -0.85) -- (2.5, -1.5) node[below] {\large$b$};
+
+      %%% Entanglement sharing
+      % photon source
+      \node (psi) [line width=0.5mm, rounded corners = 0.05cm, draw, label=test] {Source};
+      % line to A
+      % \draw[decorate, decoration={snake}, line width = 0.5mm] (-1.65,0.0) -- (-0.75,0.0) node[above=4] {} -- (psi);
+      % % line to B
+      % \draw[decorate, decoration={snake}, line width = 0.5mm] (psi) -- (0.75,0.0) node[above=4] {} -- (1.65, 0.0);
+      % prolong non-squiggly part of the line
+      \draw[line width = 0.5mm] (-1.75, 0.0) -- (-1.65,0.0);
+      \draw[line width = 0.5mm] (1.75, 0.0) -- (1.65,0.0);
+      % draw circle at the end
+      \draw[fill] (-1.75, 0.0) circle (.05cm);
+      \draw[fill] (1.75, 0.0) circle (.05cm);
+    \end{tikzpicture}
+#+end_src
+
+#+caption: Bonjour sans decoration
+#+name: fig:bell_scenario
+[[./img/test2.svg]]
+
+#+begin_theorem
+This is the theorem of the website
+#+end_theorem
+
+#+begin_proof
+blah blah blah and $x^{2} = x \times x$,
+$$ \sum x + x = x$$
+The result follows.
+#+end_proof
+
+As one can see in Figure [[fig:bell_scenario]], we have this kind of tests.
 
 * Contact
 

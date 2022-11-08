@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2022-05-17 Tue 18:47 -->
+<!-- 2022-05-21 Sat 17:51 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Hugo Abreu's webpage</title>
@@ -211,12 +211,33 @@
 </div>
 </header>
 </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        displayAlign: "center",
+        displayIndent: "0em",
+
+        "HTML-CSS": { scale: 100,
+                        linebreaks: { automatic: "false" },
+                        webFont: "TeX"
+                       },
+        SVG: {scale: 100,
+              linebreaks: { automatic: "false" },
+              font: "TeX"},
+        NativeMML: {scale: 100},
+        TeX: { equationNumbers: {autoNumber: "AMS"},
+               MultLineWidth: "85%",
+               TagSide: "right",
+               TagIndent: ".8em"
+             }
+});
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML"></script>
 </head>
 <body>
 <div id="content" class="content">
-<div class="right" id="orgc0aac15">
+<div class="right" id="org9cb8c2e">
 
-<div id="org427e6bc" class="figure">
+<div id="orgd65640c" class="figure">
 <p><img src="./img/hugo-2021.jpg" alt="hugo-2021.jpg" />
 </p>
 </div>
@@ -249,9 +270,43 @@ For more information, you can take a look at my <a href="./reference/cv_hugo_abr
 <a href="./about.html">About</a> page.
 </p>
 
-<div id="outline-container-orgc1be750" class="outline-2">
-<h2 id="orgc1be750">Contact</h2>
-<div class="outline-text-2" id="text-orgc1be750">
+
+<div id="org820e718" class="figure">
+<p><img src="./img/test1.svg" alt="test1.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 1: </span>figure test</p>
+</div>
+
+
+<div id="org22d6886" class="figure">
+<p><img src="./img/test2.svg" alt="test2.svg" class="org-svg" />
+</p>
+<p><span class="figure-number">Figure 2: </span>Bonjour sans decoration</p>
+</div>
+
+<div class="theorem" id="org7c707de">
+<p>
+This is the theorem of the website
+</p>
+
+</div>
+
+<div class="proof" id="org7a9489c">
+<p>
+blah blah blah and \(x^{2} = x \times x\),
+\[ \sum x + x = x\]
+The result follows.
+</p>
+
+</div>
+
+<p>
+As one can see in Figure <a href="#org22d6886">2</a>, we have this kind of tests.
+</p>
+
+<div id="outline-container-org7851639" class="outline-2">
+<h2 id="org7851639">Contact</h2>
+<div class="outline-text-2" id="text-org7851639">
 <p>
 <b><b>email</b></b>: hugo [dot] abreu [at] etu [dot] sorbonne-universite [dot] fr
 </p>
@@ -263,7 +318,7 @@ For more information, you can take a look at my <a href="./reference/cv_hugo_abr
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="date">Created: 2022-05-17 Tue 18:47</p>
+<p class="date">Created: 2022-05-21 Sat 17:51</p>
 <p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

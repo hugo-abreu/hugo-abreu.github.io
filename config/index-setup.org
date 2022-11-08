@@ -1,4 +1,4 @@
-#+html_head: <link rel="stylesheet" type="text/css" href="../config/index.css" />
+#+html_head: <link rel="stylesheet" type="text/css" href="./config/index.css" />
 #+html_head: <div id="preamble" class="status">
 #+html_head: <header>
 #+html_head:   <div class="banner">
