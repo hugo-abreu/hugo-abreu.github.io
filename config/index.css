@@ -1,6 +1,12 @@
 /* html{color:#585858;} */
 html{color:#000000;}
 
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 body{
   line-height:1.333;
   font-size:14pt;
@@ -160,7 +166,7 @@ nav li:before {
   content: "Theorem " counter(theorem) " (" attr(title) ").";
 }
 .theorem p {
-  display: inline 
+  display: inline
 }
 
 /* Lemma */
@@ -224,6 +230,12 @@ nav li:before {
 .right {
     float: right;
     width: 25%;
+    margin: -15px 0px -10px 20px
+}
+
+.right_text {
+    float: right;
+    width: 30%;
     margin: -15px 0px -10px 20px
 }
 
